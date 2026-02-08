@@ -67,7 +67,10 @@ export default function ChatView() {
                   const updated = [...prev];
                   const last = updated[updated.length - 1];
                   if (last.role === "assistant") {
-                    last.content += parsed.text;
+                    updated[updated.length - 1] = {
+                      ...last,
+                      content: last.content + parsed.text,
+                    };
                   }
                   return updated;
                 });
