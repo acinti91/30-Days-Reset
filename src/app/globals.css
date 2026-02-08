@@ -75,3 +75,61 @@ body::before {
 }
 .typing-dot:nth-child(2) { animation-delay: 0.2s; }
 .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+/* Chat markdown prose */
+.prose-chat {
+  line-height: 1.7;
+}
+.prose-chat p {
+  margin-bottom: 0.75em;
+}
+.prose-chat p:last-child {
+  margin-bottom: 0;
+}
+.prose-chat strong {
+  font-weight: 700;
+  color: var(--foreground);
+}
+.prose-chat em {
+  font-style: italic;
+  color: var(--text-secondary);
+}
+.prose-chat ul, .prose-chat ol {
+  margin: 0.5em 0;
+  padding-left: 1.25em;
+}
+.prose-chat li {
+  margin-bottom: 0.35em;
+}
+.prose-chat ul li {
+  list-style-type: disc;
+}
+.prose-chat ol li {
+  list-style-type: decimal;
+}
+.prose-chat h1, .prose-chat h2, .prose-chat h3 {
+  font-weight: 600;
+  margin-top: 1em;
+  margin-bottom: 0.4em;
+}
+.prose-chat h1 { font-size: 1.15em; }
+.prose-chat h2 { font-size: 1.1em; }
+.prose-chat h3 { font-size: 1.05em; }
+.prose-chat blockquote {
+  border-left: 2px solid var(--accent);
+  padding-left: 0.75em;
+  margin: 0.75em 0;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+.prose-chat code {
+  background: rgba(255, 255, 255, 0.06);
+  padding: 0.15em 0.35em;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+.prose-chat hr {
+  border: none;
+  border-top: 1px solid var(--surface-light);
+  margin: 1em 0;
+}

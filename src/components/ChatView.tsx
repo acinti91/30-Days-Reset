@@ -1,11 +1,15 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
+import ReactMarkdown from "react-markdown";
 
 interface Message {
   role: string;
   content: string;
 }
+
+const REVEAL_INTERVAL_MS = 20;
+const CHARS_PER_TICK = 2;
 
 export default function ChatView() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -13,6 +17,11 @@ export default function ChatView() {
   const [streaming, setStreaming] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  // Gradual reveal state kept in refs to avoid re-render conflicts
+  const streamBuffer = useRef("");
+  const revealedCount = useRef(0);
+  const revealTimer = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     fetch("/api/messages")
@@ -24,6 +33,54 @@ export default function ChatView() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  const stopRevealTimer = useCallback(() => {
+    if (revealTimer.current) {
+      clearInterval(revealTimer.current);
+      revealTimer.current = null;
+    }
+  }, []);
+
+  const startRevealTimer = useCallback(() => {
+    if (revealTimer.current) return;
+    revealTimer.current = setInterval(() => {
+      const target = streamBuffer.current.length;
+      if (revealedCount.current >= target) return;
+
+      revealedCount.current = Math.min(
+        revealedCount.current + CHARS_PER_TICK,
+        target
+      );
+      const revealed = streamBuffer.current.slice(0, revealedCount.current);
+
+      setMessages((prev) => {
+        const updated = [...prev];
+        const last = updated[updated.length - 1];
+        if (last?.role === "assistant") {
+          updated[updated.length - 1] = { ...last, content: revealed };
+        }
+        return updated;
+      });
+    }, REVEAL_INTERVAL_MS);
+  }, []);
+
+  // Flush any remaining buffered text when streaming ends
+  const flushBuffer = useCallback(() => {
+    stopRevealTimer();
+    const final = streamBuffer.current;
+    if (final) {
+      setMessages((prev) => {
+        const updated = [...prev];
+        const last = updated[updated.length - 1];
+        if (last?.role === "assistant") {
+          updated[updated.length - 1] = { ...last, content: final };
+        }
+        return updated;
+      });
+    }
+    streamBuffer.current = "";
+    revealedCount.current = 0;
+  }, [stopRevealTimer]);
+
   const sendMessage = async () => {
     const text = input.trim();
     if (!text || streaming) return;
@@ -31,6 +88,10 @@ export default function ChatView() {
     setInput("");
     setMessages((prev) => [...prev, { role: "user", content: text }]);
     setStreaming(true);
+
+    // Reset buffer
+    streamBuffer.current = "";
+    revealedCount.current = 0;
 
     // Add placeholder for assistant
     setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
@@ -47,14 +108,16 @@ export default function ChatView() {
 
       if (!reader) return;
 
-      let buffer = "";
+      startRevealTimer();
+
+      let parseBuffer = "";
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
 
-        buffer += decoder.decode(value, { stream: true });
-        const lines = buffer.split("\n");
-        buffer = lines.pop() || "";
+        parseBuffer += decoder.decode(value, { stream: true });
+        const lines = parseBuffer.split("\n");
+        parseBuffer = lines.pop() || "";
 
         for (const line of lines) {
           if (line.startsWith("data: ")) {
@@ -63,17 +126,7 @@ export default function ChatView() {
             try {
               const parsed = JSON.parse(data);
               if (parsed.text) {
-                setMessages((prev) => {
-                  const updated = [...prev];
-                  const last = updated[updated.length - 1];
-                  if (last.role === "assistant") {
-                    updated[updated.length - 1] = {
-                      ...last,
-                      content: last.content + parsed.text,
-                    };
-                  }
-                  return updated;
-                });
+                streamBuffer.current += parsed.text;
               }
             } catch {
               // ignore parse errors
@@ -83,18 +136,28 @@ export default function ChatView() {
       }
     } catch (err) {
       console.error("Chat error:", err);
+      stopRevealTimer();
       setMessages((prev) => {
         const updated = [...prev];
         const last = updated[updated.length - 1];
-        if (last.role === "assistant" && !last.content) {
-          last.content = "I'm having trouble connecting right now. Please try again.";
+        if (last?.role === "assistant" && !last.content) {
+          updated[updated.length - 1] = {
+            ...last,
+            content: "I'm having trouble connecting right now. Please try again.",
+          };
         }
         return updated;
       });
     }
 
+    flushBuffer();
     setStreaming(false);
   };
+
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => stopRevealTimer();
+  }, [stopRevealTimer]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -135,7 +198,15 @@ export default function ChatView() {
                   : "bg-surface-light text-foreground rounded-bl-md"
               }`}
             >
-              {msg.content || (
+              {msg.content ? (
+                msg.role === "assistant" ? (
+                  <div className="prose-chat">
+                    <ReactMarkdown>{msg.content}</ReactMarkdown>
+                  </div>
+                ) : (
+                  msg.content
+                )
+              ) : (
                 <span className="flex gap-1">
                   <span className="typing-dot w-1.5 h-1.5 rounded-full bg-text-secondary" />
                   <span className="typing-dot w-1.5 h-1.5 rounded-full bg-text-secondary" />
