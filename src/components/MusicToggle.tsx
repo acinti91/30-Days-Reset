@@ -74,16 +74,23 @@ export default function MusicToggle() {
       </div>
 
       {/* Toggle button — fixed top-right */}
-      <button
-        onClick={toggle}
-        disabled={!ready}
-        aria-label={playing ? "Pause music" : "Play music"}
-        className="fixed top-4 right-4 z-40 w-11 h-11 rounded-full bg-surface-light/80 backdrop-blur-sm border border-surface-light flex items-center justify-center transition-all hover:bg-surface disabled:opacity-30"
-      >
-        <svg className={`w-5 h-5 text-accent transition-opacity ${playing ? "opacity-100 animate-pulse" : "opacity-50"}`} viewBox="0 0 24 24" fill="currentColor">
-          <path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z" />
-        </svg>
-      </button>
+      <div className="fixed top-4 right-4 z-40 flex items-center gap-2">
+        {!playing && (
+          <span className="hidden lg:block text-xs text-text-secondary/50 select-none">
+            click &amp; chill
+          </span>
+        )}
+        <button
+          onClick={toggle}
+          disabled={!ready}
+          aria-label={playing ? "Pause music" : "Play music"}
+          className="w-11 h-11 rounded-full bg-surface-light/80 backdrop-blur-sm border border-surface-light flex items-center justify-center transition-all hover:bg-surface disabled:opacity-30"
+        >
+          <svg className={`w-5 h-5 text-accent transition-opacity ${playing ? "opacity-100 animate-pulse" : "opacity-50"}`} viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z" />
+          </svg>
+        </button>
+      </div>
     </>
   );
 }
