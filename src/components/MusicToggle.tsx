@@ -80,12 +80,9 @@ export default function MusicToggle() {
         aria-label={playing ? "Pause music" : "Play music"}
         className="fixed top-4 right-4 z-40 w-10 h-10 rounded-full bg-surface-light/80 backdrop-blur-sm border border-surface-light flex items-center justify-center transition-all hover:bg-surface disabled:opacity-30"
       >
-        <svg className={`w-5 h-5 text-accent transition-opacity ${playing ? "opacity-100" : "opacity-50"}`} viewBox="0 0 24 24" fill="currentColor">
+        <svg className={`w-5 h-5 text-accent transition-opacity ${playing ? "opacity-100 animate-pulse" : "opacity-50"}`} viewBox="0 0 24 24" fill="currentColor">
           <path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z" />
         </svg>
-        {playing && (
-          <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-accent animate-pulse" />
-        )}
       </button>
     </>
   );
