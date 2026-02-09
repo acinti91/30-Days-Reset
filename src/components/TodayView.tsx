@@ -321,7 +321,7 @@ export default function TodayView({ currentDay, allCheckIns, onSaveCheckIn, onOp
       {/* Talk to Coach */}
       <button
         onClick={onOpenChat}
-        className="w-full bg-surface-light hover:bg-surface border border-surface-light text-text-secondary px-5 py-3 rounded-full transition-colors text-sm"
+        className="w-full bg-surface-light hover:bg-surface border border-surface-light text-text-secondary px-5 py-3 rounded-full transition-colors text-sm -mt-4"
       >
         Talk to Coach about your day
       </button>

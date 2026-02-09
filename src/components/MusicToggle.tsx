@@ -76,7 +76,7 @@ export default function MusicToggle() {
       {/* Toggle button — fixed top-right */}
       <div className="fixed top-4 right-4 z-40 flex items-center gap-2">
         {!playing && (
-          <span className="hidden lg:block text-xs text-text-secondary/50 select-none">
+          <span className="hidden lg:block text-xs text-text-secondary/50 select-none italic">
             click &amp; chill
           </span>
         )}
