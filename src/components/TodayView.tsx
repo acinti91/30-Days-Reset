@@ -50,19 +50,19 @@ function SaveProgress({ completedCount, totalCount }: { completedCount: number; 
   return (
     <button
       onClick={() => setSaved(true)}
-      className="w-full flex items-center justify-center gap-2 py-3 rounded-full border border-accent/30 bg-accent/5 text-sm transition-all active:scale-[0.98]"
+      className="w-full flex items-center justify-center gap-2 py-3 rounded-full bg-accent hover:bg-accent-muted text-background text-sm font-medium transition-all active:scale-[0.98]"
     >
       {saved ? (
         <>
-          <svg className="w-4 h-4 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+          <svg className="w-4 h-4 text-background" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
             <path d="M5 13l4 4L19 7" />
           </svg>
-          <span className="text-accent font-medium">Progress saved!</span>
+          <span className="text-background font-medium">Progress saved!</span>
         </>
       ) : (
         <>
-          <span className="text-foreground">Save progress</span>
-          <span className="text-text-secondary text-xs">({completedCount}/{totalCount})</span>
+          <span className="text-background">Save progress</span>
+          <span className="text-background/60 text-xs">({completedCount}/{totalCount})</span>
         </>
       )}
     </button>
@@ -270,9 +270,6 @@ export default function TodayView({ currentDay, allCheckIns, onSaveCheckIn, onOp
         </div>
       </div>
 
-      {/* Save Progress */}
-      <SaveProgress completedCount={completedCount} totalCount={HABITS.length} />
-
       {/* Evening Reflection */}
       <EveningReflection
         hardest={localCheckIn.hardest}
@@ -280,10 +277,13 @@ export default function TodayView({ currentDay, allCheckIns, onSaveCheckIn, onOp
         onSave={handleReflectionSave}
       />
 
+      {/* Save Progress */}
+      <SaveProgress completedCount={completedCount} totalCount={HABITS.length} />
+
       {/* Talk to Coach */}
       <button
         onClick={onOpenChat}
-        className="w-full bg-surface-light hover:bg-surface border border-surface-light text-foreground px-5 py-3 rounded-full transition-colors text-sm"
+        className="w-full bg-surface-light hover:bg-surface border border-surface-light text-text-secondary px-5 py-3 rounded-full transition-colors text-sm"
       >
         Talk to Coach
       </button>
