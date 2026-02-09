@@ -167,7 +167,7 @@ export default function ChatView() {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100dvh-60px)] max-w-lg mx-auto font-[family-name:var(--font-quicksand)]">
+    <div className="flex flex-col h-[calc(100dvh-60px)] max-w-lg mx-auto font-[family-name:var(--font-quicksand)] font-medium">
       {/* Messages */}
       <div className="flex-1 overflow-y-auto px-5 pt-6 pb-4 space-y-4">
         {messages.length === 0 && (
