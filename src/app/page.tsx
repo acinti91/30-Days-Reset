@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useCallback } from "react";
 import { useApp } from "@/hooks/useApp";
 import Onboarding from "@/components/Onboarding";
 import Navigation from "@/components/Navigation";
@@ -22,6 +23,13 @@ export default function Home() {
     setActiveTab,
   } = useApp();
 
+  const [autoGreet, setAutoGreet] = useState(false);
+
+  const openChatFromToday = useCallback(() => {
+    setAutoGreet(true);
+    setActiveTab("chat");
+  }, [setActiveTab]);
+
   if (loading) {
     return (
       <div className="min-h-dvh flex items-center justify-center">
@@ -43,17 +51,17 @@ export default function Home() {
             currentDay={currentDay}
             allCheckIns={checkIns}
             onSaveCheckIn={saveCheckIn}
-            onOpenChat={() => setActiveTab("chat")}
+            onOpenChat={openChatFromToday}
           />
         )}
         {activeTab === "plan" && <PlanView currentDay={currentDay} />}
-        {activeTab === "chat" && <ChatView />}
+        {activeTab === "chat" && <ChatView autoGreet={autoGreet} />}
         {activeTab === "progress" && (
           <ProgressView currentDay={currentDay} checkIns={checkIns} />
         )}
         {activeTab === "toolkit" && <ToolkitView />}
       </div>
-      <Navigation activeTab={activeTab} onTabChange={setActiveTab} />
+      <Navigation activeTab={activeTab} onTabChange={(tab) => { setAutoGreet(false); setActiveTab(tab); }} />
     </main>
   );
 }

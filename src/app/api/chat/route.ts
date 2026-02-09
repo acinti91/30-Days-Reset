@@ -6,10 +6,12 @@ import { getWeekForDay } from "@/lib/plan-data";
 const anthropic = new Anthropic();
 
 export async function POST(request: Request) {
-  const { message } = await request.json();
+  const { message, autoGreet } = await request.json();
 
-  // Save user message
-  await saveChatMessage("user", message);
+  // For auto-greet, don't save a user message — the coach speaks first
+  if (!autoGreet) {
+    await saveChatMessage("user", message);
+  }
 
   // Get context
   const startDate = await getSetting("start_date");
@@ -34,6 +36,14 @@ export async function POST(request: Request) {
     role: m.role as "user" | "assistant",
     content: m.content,
   }));
+
+  // For auto-greet, add a hidden prompt so the coach opens the conversation
+  if (autoGreet) {
+    recentMessages.push({
+      role: "user",
+      content: "I just opened the chat. Greet me warmly in one short sentence, then ask whether I'd like to: (1) talk about what I've done so far today, or (2) get context on today's actions and daily habits. Keep it to 2-3 sentences max — casual, like a friend checking in. Don't dive into details yet, just offer the choice.",
+    });
+  }
 
   const stream = anthropic.messages.stream({
     model: "claude-sonnet-4-5-20250929",

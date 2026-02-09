@@ -11,7 +11,11 @@ interface Message {
 const REVEAL_INTERVAL_MS = 20;
 const CHARS_PER_TICK = 2;
 
-export default function ChatView() {
+interface ChatViewProps {
+  autoGreet?: boolean;
+}
+
+export default function ChatView({ autoGreet }: ChatViewProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [streaming, setStreaming] = useState(false);
@@ -23,11 +27,21 @@ export default function ChatView() {
   const revealedCount = useRef(0);
   const revealTimer = useRef<ReturnType<typeof setInterval> | null>(null);
 
+  const greetedRef = useRef(false);
+
   useEffect(() => {
     fetch("/api/messages")
       .then((r) => r.json())
-      .then((data: Message[]) => setMessages(data));
-  }, []);
+      .then((data: Message[]) => {
+        setMessages(data);
+        // Auto-greet: if opened from Today button and no existing messages
+        if (autoGreet && !greetedRef.current && data.length === 0) {
+          greetedRef.current = true;
+          // Small delay to let the component mount
+          setTimeout(() => streamResponse({ autoGreet: true }), 100);
+        }
+      });
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -81,12 +95,8 @@ export default function ChatView() {
     revealedCount.current = 0;
   }, [stopRevealTimer]);
 
-  const sendMessage = async () => {
-    const text = input.trim();
-    if (!text || streaming) return;
-
-    setInput("");
-    setMessages((prev) => [...prev, { role: "user", content: text }]);
+  const streamResponse = async (opts: { message?: string; autoGreet?: boolean } = {}) => {
+    if (streaming) return;
     setStreaming(true);
 
     // Reset buffer
@@ -100,7 +110,7 @@ export default function ChatView() {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: text }),
+        body: JSON.stringify(opts.autoGreet ? { autoGreet: true } : { message: opts.message }),
       });
 
       const reader = res.body?.getReader();
@@ -152,6 +162,15 @@ export default function ChatView() {
 
     flushBuffer();
     setStreaming(false);
+  };
+
+  const sendMessage = async () => {
+    const text = input.trim();
+    if (!text || streaming) return;
+
+    setInput("");
+    setMessages((prev) => [...prev, { role: "user", content: text }]);
+    await streamResponse({ message: text });
   };
 
   // Cleanup timer on unmount
