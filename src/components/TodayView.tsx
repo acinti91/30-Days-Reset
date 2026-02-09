@@ -18,7 +18,7 @@ interface Props {
 const HABITS = [
   { field: "phone_out_bedroom", label: "Phone slept outside bedroom", mode: "boolean" as const, info: "Sleeping without your phone breaks the cycle of checking it first and last thing. It protects your most restorative hours from dopamine triggers." },
   { field: "morning_phone_free", label: "First hour phone-free", mode: "boolean" as const, info: "The first hour sets your brain's tone for the day. Avoiding screens lets your natural focus and motivation systems wake up undisturbed." },
-  { field: "boredom_minutes", label: "Boredom practice", mode: "numeric" as const, unit: "m", info: "Sitting with nothing to do rebuilds your tolerance for low stimulation — the core skill behind a dopamine reset." },
+  { field: "boredom_minutes", label: "Practice 10 minutes of boredome", mode: "numeric" as const, unit: "m", info: "Sitting with nothing to do rebuilds your tolerance for low stimulation — the core skill behind a dopamine reset." },
   { field: "meditation_minutes", label: "Meditation", mode: "numeric" as const, unit: "m", info: "Even a few minutes of focused attention strengthens the prefrontal cortex, giving you more control over impulses and cravings." },
   { field: "phone_free_walk", label: "Phone-free walk", mode: "boolean" as const, info: "Walking without input lets your mind wander and process. It's one of the fastest ways to lower baseline dopamine and reduce anxiety." },
   { field: "evening_journal", label: "Evening journal", mode: "boolean" as const, info: "Reflecting on your day consolidates learning and self-awareness. Writing what was hard and what shifted accelerates the reset." },

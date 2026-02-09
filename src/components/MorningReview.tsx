@@ -15,7 +15,7 @@ interface Props {
 const HABIT_LABELS: Record<string, { label: string; mode: "boolean" | "numeric"; unit?: string }> = {
   phone_out_bedroom: { label: "Phone out of bedroom", mode: "boolean" },
   morning_phone_free: { label: "Phone-free morning", mode: "boolean" },
-  boredom_minutes: { label: "Boredom practice", mode: "numeric", unit: "m" },
+  boredom_minutes: { label: "Practice 10 minutes of boredome", mode: "numeric", unit: "m" },
   meditation_minutes: { label: "Meditation", mode: "numeric", unit: "m" },
   phone_free_walk: { label: "Phone-free walk", mode: "boolean" },
   evening_journal: { label: "Evening journal", mode: "boolean" },
