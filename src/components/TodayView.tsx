@@ -291,7 +291,7 @@ export default function TodayView({ currentDay, allCheckIns, onSaveCheckIn, onOp
             Daily Habits
           </h2>
           <span className="text-xs text-text-secondary">
-            {completedCount}/{HABITS.length}
+            {completedHabits}/{HABITS.length}
           </span>
         </div>
         <div className="space-y-2">
