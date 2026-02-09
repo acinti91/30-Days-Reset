@@ -77,7 +77,7 @@ export default function EveningReflection({ hardest, noticed, onSave }: Props) {
         onSave={(v) => onSave("hardest", v)}
       />
       <AutoTextarea
-        label="What did you notice?"
+        label="What felt different from yesterday?"
         value={noticed}
         onSave={(v) => onSave("noticed", v)}
       />
