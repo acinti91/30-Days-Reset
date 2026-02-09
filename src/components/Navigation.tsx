@@ -18,20 +18,20 @@ export default function Navigation({
   onTabChange: (tab: Tab) => void;
 }) {
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-surface border-t border-surface-light z-50">
-      <div className="max-w-lg mx-auto flex justify-around py-2">
+    <nav className="fixed bottom-0 left-0 right-0 bg-surface border-t border-surface-light z-50 pb-[env(safe-area-inset-bottom)]">
+      <div className="max-w-lg mx-auto flex justify-around py-3">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => onTabChange(tab.id)}
-            className={`flex flex-col items-center gap-1 px-3 py-1.5 transition-colors ${
+            className={`flex flex-col items-center gap-1 px-3 py-2 transition-colors ${
               activeTab === tab.id
                 ? "text-accent"
                 : "text-text-secondary hover:text-foreground"
             }`}
           >
             <svg
-              className="w-5 h-5"
+              className="w-6 h-6"
               viewBox="0 0 24 24"
               fill="currentColor"
             >

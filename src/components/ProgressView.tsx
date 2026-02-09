@@ -126,17 +126,17 @@ export default function ProgressView({
       )}
 
       {/* Stats */}
-      <div className="grid grid-cols-3 gap-3">
-        <div className="bg-surface rounded-xl p-4 border border-surface-light text-center">
-          <p className="font-serif text-2xl text-accent">{checkIns.length}</p>
+      <div className="grid grid-cols-3 gap-2">
+        <div className="bg-surface rounded-xl p-3 border border-surface-light text-center">
+          <p className="font-serif text-xl text-accent">{checkIns.length}</p>
           <p className="text-xs text-text-secondary mt-1">Check-ins</p>
         </div>
-        <div className="bg-surface rounded-xl p-4 border border-surface-light text-center">
-          <p className="font-serif text-2xl text-accent">{currentDay}</p>
+        <div className="bg-surface rounded-xl p-3 border border-surface-light text-center">
+          <p className="font-serif text-xl text-accent">{currentDay}</p>
           <p className="text-xs text-text-secondary mt-1">Current Day</p>
         </div>
-        <div className="bg-surface rounded-xl p-4 border border-surface-light text-center">
-          <p className="font-serif text-2xl text-accent">{30 - currentDay}</p>
+        <div className="bg-surface rounded-xl p-3 border border-surface-light text-center">
+          <p className="font-serif text-xl text-accent">{30 - currentDay}</p>
           <p className="text-xs text-text-secondary mt-1">Days Left</p>
         </div>
       </div>

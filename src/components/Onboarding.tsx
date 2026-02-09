@@ -42,13 +42,13 @@ export default function Onboarding({
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              className="block w-full max-w-[200px] mx-auto bg-surface-light border border-surface-light rounded-lg px-4 py-3 text-center text-foreground focus:outline-none focus:border-accent transition-colors"
+              className="block w-full max-w-[240px] mx-auto bg-surface-light border border-surface-light rounded-lg px-4 py-3 text-center text-foreground focus:outline-none focus:border-accent transition-colors"
             />
           </div>
 
           <button
             onClick={() => onStart(date)}
-            className="bg-accent hover:bg-accent-muted text-background font-medium px-10 py-3 rounded-full transition-colors text-sm tracking-wide"
+            className="bg-accent hover:bg-accent-muted text-background font-medium px-10 py-3 rounded-full transition-colors text-sm tracking-wide active:scale-[0.98]"
           >
             Begin
           </button>

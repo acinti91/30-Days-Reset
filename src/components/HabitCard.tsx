@@ -79,7 +79,7 @@ export default function HabitCard({ label, field, value, mode, unit, streak = 0,
             onBlur={handleNumericBlur}
             onKeyDown={(e) => e.key === "Enter" && inputRef.current?.blur()}
             onClick={(e) => e.stopPropagation()}
-            className="w-16 bg-surface-light rounded-lg px-2 py-1 text-sm text-foreground text-center focus:outline-none focus:ring-1 focus:ring-accent"
+            className="w-20 bg-surface-light rounded-lg px-2 py-1 text-sm text-foreground text-center focus:outline-none focus:ring-1 focus:ring-accent"
           />
         ) : (
           value > 0 && (

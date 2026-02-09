@@ -64,7 +64,7 @@ export default function MorningReview({ currentDay, yesterday, streaks, onDismis
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/95 animate-fade-in">
-      <div className="px-8 max-w-md w-full space-y-8 text-center">
+      <div className="px-5 max-w-md w-full space-y-8 text-center">
         <div className="space-y-3">
           <p className="text-text-secondary text-sm">Good morning</p>
           <h1 className="font-serif text-5xl font-light">
@@ -98,7 +98,7 @@ export default function MorningReview({ currentDay, yesterday, streaks, onDismis
                       if (mode === "boolean") toggleBoolean(key);
                       else if (!isEditing) startNumericEdit(key);
                     }}
-                    className={`w-full flex items-center gap-2 justify-center text-sm py-1.5 px-3 rounded-lg transition-colors ${
+                    className={`w-full flex items-center gap-2 justify-center text-sm py-2.5 px-3 rounded-lg transition-colors ${
                       done
                         ? "text-foreground bg-accent/5"
                         : "text-text-secondary/60 hover:bg-surface-light"
@@ -124,7 +124,7 @@ export default function MorningReview({ currentDay, yesterday, streaks, onDismis
                         onBlur={() => finishNumericEdit(key)}
                         onKeyDown={(e) => e.key === "Enter" && inputRef.current?.blur()}
                         onClick={(e) => e.stopPropagation()}
-                        className="w-14 bg-surface-light rounded-lg px-2 py-0.5 text-sm text-foreground text-center focus:outline-none focus:ring-1 focus:ring-accent"
+                        className="w-20 bg-surface-light rounded-lg px-2 py-1 text-sm text-foreground text-center focus:outline-none focus:ring-1 focus:ring-accent"
                       />
                     ) : (
                       mode === "numeric" && done && (
