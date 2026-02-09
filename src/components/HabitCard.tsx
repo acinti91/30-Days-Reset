@@ -60,35 +60,29 @@ export default function HabitCard({ label, field, value, mode, unit, streak = 0,
           )}
         </div>
 
-        {/* Label */}
+        {/* Label + inline info icon */}
         <span className={`text-sm flex-1 text-left ${completed ? "text-foreground" : "text-text-secondary"}`}>
           {label}
-        </span>
-
-        {/* Info icon */}
-        {info && (
-          <span
-            role="button"
-            tabIndex={0}
-            onClick={(e) => {
-              e.stopPropagation();
-              setShowInfo((prev) => !prev);
-            }}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
+          {info && (
+            <span
+              role="button"
+              tabIndex={0}
+              onClick={(e) => {
                 e.stopPropagation();
                 setShowInfo((prev) => !prev);
-              }
-            }}
-            className="shrink-0 text-text-secondary/50 hover:text-text-secondary transition-colors"
-          >
-            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <circle cx="12" cy="12" r="10" />
-              <line x1="12" y1="16" x2="12" y2="12" />
-              <line x1="12" y1="8" x2="12.01" y2="8" />
-            </svg>
-          </span>
-        )}
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.stopPropagation();
+                  setShowInfo((prev) => !prev);
+                }
+              }}
+              className="inline-flex items-center justify-center w-3.5 h-3.5 ml-1.5 rounded-full border border-current text-[9px] font-semibold leading-none text-text-secondary/40 hover:text-text-secondary transition-colors align-middle cursor-pointer"
+            >
+              i
+            </span>
+          )}
+        </span>
 
         {/* Done indicator */}
         {completed && mode === "boolean" && (
