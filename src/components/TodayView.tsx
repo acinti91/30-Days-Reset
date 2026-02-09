@@ -60,10 +60,7 @@ function SaveProgress({ completedCount, totalCount }: { completedCount: number; 
           <span className="text-background font-medium">Progress saved!</span>
         </>
       ) : (
-        <>
-          <span className="text-background">Save progress</span>
-          <span className="text-background/60 text-xs">({completedCount}/{totalCount})</span>
-        </>
+        <span className="text-background">Save progress</span>
       )}
     </button>
   );
