@@ -8,11 +8,11 @@ interface Props {
   value: number;
   mode: "boolean" | "numeric";
   unit?: string;
-  streak: number;
+  streak?: number;
   onChange: (field: string, value: number) => void;
 }
 
-export default function HabitCard({ label, field, value, mode, unit, streak, onChange }: Props) {
+export default function HabitCard({ label, field, value, mode, unit, streak = 0, onChange }: Props) {
   const [editing, setEditing] = useState(false);
   const [localValue, setLocalValue] = useState(String(value || ""));
   const inputRef = useRef<HTMLInputElement>(null);

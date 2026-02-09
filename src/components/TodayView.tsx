@@ -73,6 +73,9 @@ export default function TodayView({ currentDay, allCheckIns, onSaveCheckIn, onOp
   const today = new Date().toISOString().split("T")[0];
   const dayData = getDayData(currentDay);
 
+  // Action completions state
+  const [actionCompletions, setActionCompletions] = useState<Record<number, number>>({});
+
   // Local check-in state — the single source of truth for the current day
   const [localCheckIn, setLocalCheckIn] = useState<Omit<CheckIn, "id" | "created_at">>({
     date: today,
@@ -105,6 +108,18 @@ export default function TodayView({ currentDay, allCheckIns, onSaveCheckIn, onOp
     }
   }, [allCheckIns, today]);
 
+  // Fetch action completions
+  useEffect(() => {
+    fetch(`/api/actions?date=${today}&day=${currentDay}`)
+      .then((r) => r.json())
+      .then((rows: { action_index: number; completed: number }[]) => {
+        const map: Record<number, number> = {};
+        rows.forEach((r) => (map[r.action_index] = r.completed));
+        setActionCompletions(map);
+      })
+      .catch(() => {});
+  }, [today, currentDay]);
+
   // Yesterday's check-in
   const yesterday = useMemo(() => {
     const d = new Date(today + "T12:00:00");
@@ -129,6 +144,19 @@ export default function TodayView({ currentDay, allCheckIns, onSaveCheckIn, onOp
       });
     },
     [onSaveCheckIn]
+  );
+
+  const handleActionToggle = useCallback(
+    (field: string, value: number) => {
+      const actionIndex = Number(field);
+      setActionCompletions((prev) => ({ ...prev, [actionIndex]: value }));
+      fetch("/api/actions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ date: today, dayNumber: currentDay, actionIndex, completed: value }),
+      }).catch(() => {});
+    },
+    [today, currentDay]
   );
 
   const handleReflectionSave = useCallback(
@@ -173,10 +201,15 @@ export default function TodayView({ currentDay, allCheckIns, onSaveCheckIn, onOp
   const { day, week } = dayData;
   const progress = ((currentDay - 1) / 30) * 100;
 
-  // Count completed habits for today
-  const completedCount = HABITS.filter(
+  // Count completed habits + actions for today
+  const completedHabits = HABITS.filter(
     (h) => (localCheckIn[h.field as keyof typeof localCheckIn] as number) > 0
   ).length;
+  const completedActions = dayData
+    ? dayData.day.actions.filter((_, i) => actionCompletions[i] > 0).length
+    : 0;
+  const completedCount = completedHabits + completedActions;
+  const totalCount = HABITS.length + (dayData ? dayData.day.actions.length : 0);
 
   return (
     <>
@@ -229,17 +262,24 @@ export default function TodayView({ currentDay, allCheckIns, onSaveCheckIn, onOp
 
       {/* Actions */}
       <div className="space-y-3">
-        <h2 className="text-xs uppercase tracking-widest text-text-secondary">
-          Actions
-        </h2>
+        <div className="flex items-center justify-between">
+          <h2 className="text-xs uppercase tracking-widest text-text-secondary">
+            Actions
+          </h2>
+          <span className="text-xs text-text-secondary">
+            {day.actions.filter((_, i) => actionCompletions[i] > 0).length}/{day.actions.length}
+          </span>
+        </div>
         <div className="space-y-2">
           {day.actions.map((action, i) => (
-            <div
+            <HabitCard
               key={i}
-              className="bg-surface rounded-xl p-4 border border-surface-light"
-            >
-              <p className="text-sm text-foreground leading-relaxed">{action}</p>
-            </div>
+              field={String(i)}
+              label={action}
+              mode="boolean"
+              value={actionCompletions[i] ?? 0}
+              onChange={handleActionToggle}
+            />
           ))}
         </div>
       </div>
@@ -278,7 +318,7 @@ export default function TodayView({ currentDay, allCheckIns, onSaveCheckIn, onOp
       />
 
       {/* Save Progress */}
-      <SaveProgress completedCount={completedCount} totalCount={HABITS.length} />
+      <SaveProgress completedCount={completedCount} totalCount={totalCount} />
 
       {/* Talk to Coach */}
       <button

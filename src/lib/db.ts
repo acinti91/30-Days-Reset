@@ -83,3 +83,38 @@ export async function saveChatMessage(
 ): Promise<void> {
   await getSupabase().from("chat_messages").insert({ role, content });
 }
+
+export interface ActionCompletion {
+  id?: number;
+  date: string;
+  day_number: number;
+  action_index: number;
+  completed: number;
+  created_at?: string;
+}
+
+export async function getActionCompletions(
+  date: string,
+  dayNumber: number
+): Promise<ActionCompletion[]> {
+  const { data } = await getSupabase()
+    .from("action_completions")
+    .select("*")
+    .eq("date", date)
+    .eq("day_number", dayNumber);
+  return data ?? [];
+}
+
+export async function saveActionCompletion(
+  date: string,
+  dayNumber: number,
+  actionIndex: number,
+  completed: number
+): Promise<void> {
+  await getSupabase()
+    .from("action_completions")
+    .upsert(
+      { date, day_number: dayNumber, action_index: actionIndex, completed },
+      { onConflict: "date,day_number,action_index" }
+    );
+}
