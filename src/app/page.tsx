@@ -39,6 +39,7 @@ export default function Home() {
         {activeTab === "today" && (
           <TodayView
             currentDay={currentDay}
+            allCheckIns={checkIns}
             onSaveCheckIn={saveCheckIn}
             onOpenChat={() => setActiveTab("chat")}
           />
