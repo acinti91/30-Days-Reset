@@ -35,6 +35,40 @@ const DEFAULT_CHECKIN: Omit<CheckIn, "id" | "created_at" | "date"> = {
   noticed: "",
 };
 
+function SaveProgress({ completedCount, totalCount }: { completedCount: number; totalCount: number }) {
+  const [saved, setSaved] = useState(false);
+
+  useEffect(() => {
+    if (saved) {
+      const t = setTimeout(() => setSaved(false), 2000);
+      return () => clearTimeout(t);
+    }
+  }, [saved]);
+
+  if (completedCount === 0) return null;
+
+  return (
+    <button
+      onClick={() => setSaved(true)}
+      className="w-full flex items-center justify-center gap-2 py-3 rounded-full border border-accent/30 bg-accent/5 text-sm transition-all active:scale-[0.98]"
+    >
+      {saved ? (
+        <>
+          <svg className="w-4 h-4 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+            <path d="M5 13l4 4L19 7" />
+          </svg>
+          <span className="text-accent font-medium">Progress saved!</span>
+        </>
+      ) : (
+        <>
+          <span className="text-foreground">Save progress</span>
+          <span className="text-text-secondary text-xs">({completedCount}/{totalCount})</span>
+        </>
+      )}
+    </button>
+  );
+}
+
 export default function TodayView({ currentDay, allCheckIns, onSaveCheckIn, onOpenChat }: Props) {
   const today = new Date().toISOString().split("T")[0];
   const dayData = getDayData(currentDay);
@@ -235,6 +269,9 @@ export default function TodayView({ currentDay, allCheckIns, onSaveCheckIn, onOp
           ))}
         </div>
       </div>
+
+      {/* Save Progress */}
+      <SaveProgress completedCount={completedCount} totalCount={HABITS.length} />
 
       {/* Evening Reflection */}
       <EveningReflection
