@@ -77,7 +77,7 @@ export default function HabitCard({ label, field, value, mode, unit, streak = 0,
                   setShowInfo((prev) => !prev);
                 }
               }}
-              className="inline-flex items-center justify-center w-3.5 h-3.5 ml-1.5 rounded-full border border-current text-[9px] font-semibold leading-none text-text-secondary/40 hover:text-text-secondary transition-colors align-middle cursor-pointer"
+              className="inline-flex items-center justify-center w-2.5 h-2.5 ml-1 rounded-full border border-current text-[7px] font-semibold leading-none text-text-secondary/40 hover:text-text-secondary transition-colors align-middle cursor-pointer"
             >
               i
             </span>
