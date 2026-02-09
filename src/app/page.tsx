@@ -8,6 +8,7 @@ import PlanView from "@/components/PlanView";
 import ChatView from "@/components/ChatView";
 import ProgressView from "@/components/ProgressView";
 import ToolkitView from "@/components/ToolkitView";
+import MusicToggle from "@/components/MusicToggle";
 
 export default function Home() {
   const {
@@ -35,6 +36,7 @@ export default function Home() {
 
   return (
     <main className="min-h-dvh bg-background">
+      <MusicToggle />
       <div className="fade-active">
         {activeTab === "today" && (
           <TodayView
