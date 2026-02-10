@@ -21,6 +21,15 @@ const HABIT_LABELS: Record<string, { label: string; mode: "boolean" | "numeric";
   evening_journal: { label: "Evening journal", mode: "boolean" },
 };
 
+const STREAK_SHORT_LABELS: Record<string, string> = {
+  phone_out_bedroom: "Phone out",
+  morning_phone_free: "Phone-free AM",
+  boredom_minutes: "Boredom",
+  meditation_minutes: "Meditation",
+  phone_free_walk: "Phone-free walk",
+  evening_journal: "Journal",
+};
+
 const HABIT_KEYS = Object.keys(HABIT_LABELS);
 
 export default function MorningReview({ currentDay, yesterday, streaks, onDismiss, onSaveYesterday }: Props) {
@@ -63,8 +72,8 @@ export default function MorningReview({ currentDay, yesterday, streaks, onDismis
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/95 animate-fade-in">
-      <div className="px-5 max-w-md w-full space-y-8 text-center">
+    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto pb-12 bg-background/95 animate-fade-in">
+      <div className="pt-12 px-5 max-w-md w-full space-y-8 text-center">
         <div className="space-y-3">
           <p className="text-text-secondary text-sm">Good morning</p>
           <h1 className="font-serif text-5xl font-light">
@@ -74,6 +83,9 @@ export default function MorningReview({ currentDay, yesterday, streaks, onDismis
             &ldquo;{quote.text}&rdquo;
             <br />
             <span className="text-xs not-italic">&mdash; {quote.author}</span>
+          </p>
+          <p className="text-text-secondary text-sm">
+            Before starting today, let&apos;s review what you did yesterday.
           </p>
         </div>
 
@@ -154,7 +166,7 @@ export default function MorningReview({ currentDay, yesterday, streaks, onDismis
                     <span className="text-accent">🔥</span>
                     <span className="text-foreground">{count}</span>
                     <span className="text-text-secondary text-xs">
-                      {HABIT_LABELS[key]?.label.split(" ")[0]}
+                      {STREAK_SHORT_LABELS[key] ?? HABIT_LABELS[key]?.label}
                     </span>
                   </span>
                 ))}
