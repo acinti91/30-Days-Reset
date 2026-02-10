@@ -97,6 +97,14 @@ export default function TodayView({ currentDay, viewingDay, startDate, allCheckI
     ...DEFAULT_CHECKIN,
   });
 
+  // Edit mode for past days
+  const [editing, setEditing] = useState(false);
+
+  // Reset editing when switching days
+  useEffect(() => {
+    setEditing(false);
+  }, [displayDay]);
+
   // Morning review visibility (only for current day)
   const [showMorningReview, setShowMorningReview] = useState(() => {
     if (typeof window === "undefined") return false;
@@ -173,19 +181,19 @@ export default function TodayView({ currentDay, viewingDay, startDate, allCheckI
   // Save helper — merges a field change into local state and persists the full object
   const handleHabitChange = useCallback(
     (field: string, value: number) => {
-      if (isPastDay) return;
+      if (isPastDay && !editing) return;
       setLocalCheckIn((prev) => {
         const next = { ...prev, [field]: value };
         onSaveCheckIn(next);
         return next;
       });
     },
-    [onSaveCheckIn, isPastDay]
+    [onSaveCheckIn, isPastDay, editing]
   );
 
   const handleActionToggle = useCallback(
     (field: string, value: number) => {
-      if (isPastDay) return;
+      if (isPastDay && !editing) return;
       const actionIndex = Number(field);
       setActionCompletions((prev) => ({ ...prev, [actionIndex]: value }));
       fetch("/api/actions", {
@@ -302,6 +310,18 @@ export default function TodayView({ currentDay, viewingDay, startDate, allCheckI
         ))}
       </div>
 
+      {/* Coach Intro */}
+      {day.coachIntro && (
+        <div className="space-y-3">
+          <h2 className="text-xs uppercase tracking-widest text-text-secondary">
+            Why This Matters Today
+          </h2>
+          <p className="text-text-secondary text-sm leading-relaxed italic whitespace-pre-line">
+            {day.coachIntro}
+          </p>
+        </div>
+      )}
+
       {/* Actions */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
@@ -376,6 +396,28 @@ export default function TodayView({ currentDay, viewingDay, startDate, allCheckI
           className="w-full bg-surface-light hover:bg-surface border border-surface-light text-text-secondary px-5 py-3 rounded-full transition-colors text-sm -mt-4"
         >
           Talk to Coach about your day
+        </button>
+      )}
+
+      {/* Edit past day */}
+      {isPastDay && !editing && (
+        <button
+          onClick={() => setEditing(true)}
+          className="w-full flex items-center justify-center gap-2 py-3 rounded-full border border-surface-light text-text-secondary hover:text-foreground hover:border-accent/30 text-sm transition-colors cursor-pointer"
+        >
+          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+          </svg>
+          Edit your responses
+        </button>
+      )}
+      {isPastDay && editing && (
+        <button
+          onClick={() => setEditing(false)}
+          className="w-full flex items-center justify-center gap-2 py-3 rounded-full bg-accent hover:bg-accent-muted text-background text-sm font-medium transition-colors cursor-pointer"
+        >
+          Done editing
         </button>
       )}
 

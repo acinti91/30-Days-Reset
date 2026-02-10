@@ -43,7 +43,7 @@ export const planData: Week[] = [
           "Each time you reach for your phone, pause and note what triggered the urge",
           "5 minutes of sitting in silence before bed",
         ],
-        coachIntro: "Today is about one thing: creating physical distance between you and your phone at night. The bedroom is where your brain recovers — protecting that space is the foundation everything else builds on.",
+        coachIntro: "Welcome to Day 1. This entire week is about one word: awareness. You're not trying to be perfect, you're not quitting your phone forever — you're learning to see clearly how it shapes your days, your sleep, your mood, and your attention.\n\nToday we start with the single most impactful change you can make: getting your phone out of the bedroom. Research consistently shows that having a phone within arm's reach at night disrupts sleep quality even when you don't use it — the mere possibility of a notification keeps part of your brain on alert. Your bedroom is where your brain recovers, consolidates memories, and resets its dopamine receptors. Protecting that space is the foundation everything else in this program builds on.\n\nThe other actions today are simple: notice your urges and sit in brief silence. Don't judge what you find — just observe. You're building the muscle of noticing, and that muscle will carry you through the next thirty days.",
       },
       {
         day: 2,
@@ -54,7 +54,7 @@ export const planData: Week[] = [
           "Journal one paragraph about how yesterday felt without the phone in bed",
           "10 minutes of boredom sitting — no input, just presence",
         ],
-        coachIntro: "Yesterday you reclaimed your bedroom. Today you reclaim your morning. The first hour after waking is when your brain is most impressionable — what you do with it shapes the entire day.",
+        coachIntro: "Yesterday you reclaimed your bedroom. Today you reclaim your morning. The first hour after waking is when your brain is most impressionable — cortisol is naturally elevated, and your prefrontal cortex is still coming online. If the first thing you do is scroll, you're handing that vulnerable window to algorithms designed to hook you.\n\nInstead, you'll build a simple morning sequence that belongs to you. Water, movement, breath, food — in whatever order feels right. You're also starting two new daily habits: journaling and boredom sitting. The journal helps you process what's changing. The boredom sit trains your brain to tolerate low stimulation, which is the core skill behind every dopamine reset.",
       },
       {
         day: 3,
@@ -65,7 +65,7 @@ export const planData: Week[] = [
           "15 minutes of boredom sitting",
           "Take a 20-minute walk without your phone",
         ],
-        coachIntro: "Notifications are tiny hijacks — each one pulls you out of your own mind. Today you take back control of your attention by silencing what doesn't matter and walking without a screen for the first time.",
+        coachIntro: "Every notification is a tiny interruption, and research shows it takes an average of 23 minutes to fully regain focus after one. Multiply that across dozens of daily alerts and you begin to see where your attention goes. Today you audit every notification on your phone and silence everything that isn't a real human needing you right now.\n\nYou're also taking your first phone-free walk. Walking without input is one of the fastest ways to lower your baseline dopamine and let your default mode network — the part of your brain responsible for creativity, self-reflection, and problem-solving — do its work. It might feel boring at first. That's the point.",
       },
       {
         day: 4,
@@ -76,7 +76,7 @@ export const planData: Week[] = [
           "15 minutes boredom sitting",
           "Write down your three biggest phone triggers",
         ],
-        coachIntro: "Color is one of the main hooks your phone uses to grab attention. Grayscale makes your screen boring on purpose — and boring is exactly what we want right now. Today you also start surfing urges instead of obeying them.",
+        coachIntro: "App designers use color strategically — red notification badges trigger urgency, bright icons draw your eye. Switching to grayscale removes that lever entirely. Your phone becomes a tool instead of a slot machine. Many people report that grayscale alone reduces their screen time by 15-20%.\n\nToday you also practice urge surfing: when the impulse to scroll hits, you don't fight it and you don't obey it. You set a two-minute timer and breathe. Most urges peak and pass within 90 seconds if you don't act on them. You're also writing down your top three triggers — the specific situations or emotions that make you reach for your phone. Naming them takes away some of their power.",
       },
       {
         day: 5,
@@ -87,7 +87,7 @@ export const planData: Week[] = [
           "Phone-free lunch — eat slowly, taste the food",
           "15 minutes boredom sitting",
         ],
-        coachIntro: "Today you add a powerful new tool: meditation. You've been sitting with boredom — meditation takes that further by training your attention deliberately. You're also checking your screen time baseline so you can see change over time.",
+        coachIntro: "Today you add a powerful new daily habit: meditation. You've been sitting with boredom, which is passive — meditation is active. You're deliberately training your attention to stay where you put it instead of chasing every shiny thought. Even ten minutes a day strengthens the prefrontal cortex, the part of your brain that says \"no\" to impulses.\n\nYou're also recording your screen time baseline. Don't judge the number — just write it down. In ten days you'll check again, and the comparison will show you something no amount of willpower can: objective proof that your relationship with your phone is changing.",
       },
       {
         day: 6,
@@ -98,7 +98,7 @@ export const planData: Week[] = [
           "10-minute meditation",
           "Evening journal: What did you notice without social media?",
         ],
-        coachIntro: "Social media is engineered for compulsive use. Today you step away from it entirely. The discomfort you feel is the gap between stimulation and satisfaction — movement helps you close it naturally.",
+        coachIntro: "Social media platforms employ thousands of engineers whose job is to maximize your time on screen. Infinite scroll, variable reward schedules, social validation loops — these aren't features, they're hooks. Today you step away from all of it.\n\nThe discomfort you may feel is real and it's important. It's the gap between the stimulation your brain has been trained to expect and the natural satisfaction of an unmediated life. Physical movement is today's antidote — it produces dopamine through effort rather than consumption, and that kind of dopamine actually leaves you feeling better afterward, not emptier.",
       },
       {
         day: 7,
@@ -109,7 +109,7 @@ export const planData: Week[] = [
           "10-minute meditation",
           "Write a letter to yourself about what you've observed this week",
         ],
-        coachIntro: "One week down. Today is for looking back with honesty and resting with intention. The letter you write to yourself is a snapshot of who you are right now — you'll be glad you captured it.",
+        coachIntro: "One full week. You've moved your phone out of the bedroom, reclaimed your mornings, silenced notifications, walked without a screen, gone grayscale, started meditating, and began a social media fast. That is a remarkable amount of change in seven days.\n\nToday is for consolidation, not more pushing. The long walk is meditative, not athletic. The letter you write to yourself is a time capsule — when you read it on Day 30, you'll see how far you've come. Be honest about what's been hard, what surprised you, and what you're starting to feel differently about. Rest is not the absence of progress; it's where progress solidifies.",
       },
     ],
   },
@@ -133,7 +133,7 @@ export const planData: Week[] = [
           "15-minute meditation",
           "Journal about what you chose to do and how it felt",
         ],
-        coachIntro: "Week 2 begins. You've created distance — now you fill the space. Today's two-hour block is your first taste of extended analog living. Notice what you reach for when the phone isn't an option.",
+        coachIntro: "Welcome to Week 2. Last week was about separation — creating distance between you and your phone. This week is about substitution: filling the space you've opened with things that genuinely nourish you. The void left by less screen time can feel uncomfortable, almost like hunger. That discomfort is your brain rewiring, and it's a sign things are working.\n\nToday you take a big step: a full two-hour block with your phone off or in another room. This is longer than anything you've done so far, and the point isn't to white-knuckle through it. The point is to rediscover what you actually enjoy doing when screens aren't an option. Reading, cooking, drawing, building, playing music — these analog pleasures produce a slower, steadier kind of satisfaction that your brain has been starved of. Pay attention to what you reach for naturally. That instinct is telling you something important about who you are underneath the scroll.",
       },
       {
         day: 9,
@@ -144,7 +144,7 @@ export const planData: Week[] = [
           "15-minute meditation",
           "20 minutes boredom sitting",
         ],
-        coachIntro: "Eating without screens is one of the simplest ways to practice presence. You're also stretching your morning container — 90 minutes of undistracted waking sets a powerful tone.",
+        coachIntro: "Eating is one of the most ancient pleasures we have, yet most of us barely taste our food because we're watching something while we eat. Screen-free meals force you to actually be in your body — to notice flavors, textures, the feeling of hunger becoming fullness. It's a small act of presence that ripples outward.\n\nYou're also extending your phone-free morning to 90 minutes. By now the first 60 minutes should feel more natural. Stretching to 90 deepens the container and gives you more time to settle into your own thoughts before the world's demands arrive.",
       },
       {
         day: 10,
@@ -155,7 +155,7 @@ export const planData: Week[] = [
           "15-minute meditation",
           "Write about what's getting easier and what's still hard",
         ],
-        coachIntro: "One-third of the way. That's not nothing — that's ten days of choosing differently. Today, bring your presence into a conversation and notice how much richer it feels when no one is half-somewhere-else.",
+        coachIntro: "Ten days. One-third of the way through. Pause and let that land — you have ten consecutive days of choosing differently under your belt. That's not a streak on a screen; that's a pattern forming in your brain.\n\nToday's focus is relational. Phones fracture conversations — even a phone face-down on a table reduces the depth of connection between two people (researchers call this the \"iPhone effect\"). Your action today is to have one conversation where neither person checks their phone. Notice the difference: the eye contact, the pauses, the feeling of being fully heard. This is what connection felt like before we all started splitting our attention.",
       },
       {
         day: 11,
@@ -166,7 +166,7 @@ export const planData: Week[] = [
           "15-minute meditation",
           "Notice: what did you actually miss by not reading the news?",
         ],
-        coachIntro: "News feeds are designed to make everything feel urgent. Today you test whether that urgency is real. Spoiler: most of it isn't. Spend time in nature instead and let your nervous system remember what calm feels like.",
+        coachIntro: "News creates a constant low-grade anxiety by making distant events feel immediate and personal. The 24-hour news cycle is designed to keep you checking — \"what happened now?\" is just another form of compulsive refreshing. Today you test what happens when you step away from it entirely.\n\nBy tonight, ask yourself honestly: what did you actually miss? Almost certainly nothing that affected your daily life. Meanwhile, the 30 minutes you spend in nature will do something news never can — it will lower your cortisol, calm your nervous system, and remind your body what it feels like to exist without urgency.",
       },
       {
         day: 12,
@@ -177,7 +177,7 @@ export const planData: Week[] = [
           "15-minute meditation",
           "Phone goes to charging station by 9 PM",
         ],
-        coachIntro: "Consumption depletes dopamine; creation replenishes it. Today you shift from passive input to active output. The evening ritual you design tonight will protect your sleep for the rest of the reset.",
+        coachIntro: "There's a fundamental difference between consuming and creating. Scrolling, watching, reading feeds — these are passive. Your brain receives but doesn't produce, and over time that passivity dulls your sense of agency. Making something reverses the flow. When you write, cook, draw, or play music, you engage different neural circuits — ones that leave you feeling energized rather than depleted.\n\nTonight you also design your evening wind-down ritual. Sleep researchers consistently find that the hour before bed determines sleep quality. Dim lights, warm beverages, gentle movement — these signal to your brain that it's safe to power down. This ritual will protect your nights for the rest of the reset and beyond.",
       },
       {
         day: 13,
@@ -188,7 +188,7 @@ export const planData: Week[] = [
           "15-minute meditation",
           "Journal: What ideas or memories surfaced during boredom?",
         ],
-        coachIntro: "Boredom isn't emptiness — it's a doorway. When you stop filling every moment, your mind starts producing its own material: ideas, memories, connections. Today's longer sit gives that process room to breathe.",
+        coachIntro: "By now you've been sitting with boredom for almost two weeks, and something may be shifting. The early sits felt restless, maybe uncomfortable. But boredom, when you stop running from it, becomes a portal. Your mind begins generating its own content — memories you'd forgotten, ideas that connect in new ways, a sense of spaciousness that feels almost luxurious.\n\nToday's 25-minute sit is the longest yet. You're also extending your phone-free block to three hours. This isn't about deprivation — it's about discovering that you can be fully alive for three hours without any digital input at all. Journal what comes up. The thoughts that emerge from extended boredom are often the most honest ones you'll have.",
       },
       {
         day: 14,
@@ -199,7 +199,7 @@ export const planData: Week[] = [
           "15-minute meditation",
           "Check screen time — compare to Day 5 baseline",
         ],
-        coachIntro: "Two weeks in. Check your screen time and compare it to your Day 5 baseline — the number tells a story. Today is about seeing your progress clearly and preparing for the deeper work of Week 3.",
+        coachIntro: "Two weeks complete — you're about to cross the halfway mark. Today's screen time check is important: compare the number to your Day 5 baseline and let the data speak. Most people see a 30-50% reduction by this point. That's not willpower — that's your brain genuinely wanting less stimulation because it's starting to find satisfaction elsewhere.\n\nThe analog activity today should be something immersive — a hike, a museum, a library afternoon, a workshop. Give yourself permission to lose track of time in something real. Tomorrow begins the third week, which is the hardest stretch of the reset. Motivation naturally dips around the midpoint. Today, refill your reserves.",
       },
     ],
   },
@@ -223,7 +223,7 @@ export const planData: Week[] = [
           "20-minute meditation",
           "Evening journal: Who are you becoming?",
         ],
-        coachIntro: "Halfway. You've earned a celebration — not through consumption, but through presence. Today's half-day sabbath is a preview of what sustainable digital freedom feels like. Six hours, no phone, full living.",
+        coachIntro: "Welcome to Week 3 — and congratulations, you're halfway through. This is the hardest stretch of the reset. The novelty of the first week is gone, the structured progress of the second week is behind you, and the finish line still feels far away. Motivation naturally dips here. That's normal, and it's why this week is designed to challenge and integrate rather than introduce new habits.\n\nToday you celebrate the halfway mark with a half-day digital sabbath — phone off from waking until noon. Six hours of analog living. This isn't a test of endurance; it's a preview of what sustainable freedom from your phone actually feels like. Fill those hours with something that brings genuine joy: not consumption, but creation, connection, or quiet presence.\n\nThe question in tonight's journal — \"Who are you becoming?\" — matters more than it might seem. You're not just changing a habit; you're changing your relationship with stimulation, attention, and time itself. Name what's shifting.",
       },
       {
         day: 16,
@@ -234,7 +234,7 @@ export const planData: Week[] = [
           "20-minute meditation",
           "Practice being fully present in one conversation today",
         ],
-        coachIntro: "Phones promise connection but often deliver isolation. Today you take inventory of your real relationships and reach out to someone in person. Presence is the greatest gift you can give another human.",
+        coachIntro: "We use our phones constantly to \"stay connected,\" but studies show that heavy phone users often feel lonelier than light users. The connection phones offer is wide but shallow — likes, comments, quick texts. Real connection requires presence, vulnerability, and uninterrupted attention.\n\nToday you take an honest inventory of who you've been connecting with through your phone versus in person. Then you reach out to one person and arrange something face to face. This isn't about judging your social life — it's about noticing where your relational energy has been going and redirecting some of it toward depth.",
       },
       {
         day: 17,
@@ -245,7 +245,7 @@ export const planData: Week[] = [
           "20-minute meditation",
           "Notice how single-tasking affects your energy and focus",
         ],
-        coachIntro: "Multitasking is a myth — your brain just switches rapidly between things, draining energy each time. Today you practice single-tasking and batched email. The clarity might surprise you.",
+        coachIntro: "Your phone trained you to multitask, but neuroscience is clear: the brain doesn't multitask. It switches rapidly between tasks, and each switch costs energy, accuracy, and time. Studies show that chronic multitaskers are actually worse at filtering irrelevant information — the opposite of what you'd expect.\n\nToday you practice single-tasking: one browser tab, one task, full attention. You also batch your email into specific windows instead of checking constantly. This approach often feels slower at first but produces more and better work by the end of the day. Notice how your energy feels different when your attention isn't being fragmented every few minutes.",
       },
       {
         day: 18,
@@ -256,7 +256,7 @@ export const planData: Week[] = [
           "20-minute meditation",
           "Phone-free walk, practicing your alternative responses mentally",
         ],
-        coachIntro: "Understanding your triggers is the difference between reacting and choosing. Today you map the emotional patterns that drive phone use and design intentional alternatives for each one.",
+        coachIntro: "Every compulsive phone check starts with a trigger — an emotion, a situation, a bodily sensation that you've learned to soothe with your screen. The five most common are boredom, anxiety, FOMO, habit (reaching without thinking), and loneliness. Today you map yours.\n\nThis isn't just self-awareness for its own sake. For each trigger, you write one specific alternative response. Bored? Pick up a book. Anxious? Three deep breaths. The goal is to pre-decide so that in the moment, you don't have to rely on willpower — you just follow the plan. On your phone-free walk, mentally rehearse these alternatives. Visualization primes your brain to execute when it counts.",
       },
       {
         day: 19,
@@ -267,7 +267,7 @@ export const planData: Week[] = [
           "Cook a meal in silence, focusing entirely on the process",
           "Journal about what silence teaches you",
         ],
-        coachIntro: "Silence used to be normal. Now it feels radical. Today you practice extended stillness and let your mind settle fully. The insights that arise in deep quiet are often the ones that matter most.",
+        coachIntro: "For most of human history, silence was the default. Now it's so rare that it can feel genuinely uncomfortable. We fill every gap — earbuds on walks, podcasts while cooking, music while working. Today you reclaim silence as a resource, not a void.\n\nThirty minutes of complete silence is today's anchor practice, and cooking a meal without any audio input is a powerful complement. When there's nothing to listen to, you start listening to yourself — your thoughts, your body, the sounds of the world around you. Tonight's journal prompt invites you to articulate what silence is teaching you. Many people discover that their best thinking happens in quiet.",
       },
       {
         day: 20,
@@ -278,7 +278,7 @@ export const planData: Week[] = [
           "20-minute meditation",
           "Stock up: books, art supplies, ingredients for cooking, walking shoes",
         ],
-        coachIntro: "Twenty days of intentional living. Tomorrow you go fully offline for an entire day — today is about preparing so that day feels spacious rather than anxious. Stock your analog toolkit.",
+        coachIntro: "Twenty days in — two-thirds of the reset complete. Tomorrow is a full digital sabbath, and today is preparation day. The difference between a sabbath that feels freeing and one that feels like a prison is preparation. If you wake up tomorrow with nothing to do and no phone, you'll feel trapped. If you wake up with books stacked, ingredients ready, walking shoes by the door, and a friend to visit — you'll feel free.\n\nStock your analog toolkit today. Think about what you genuinely want to do with an entire day of uninterrupted, un-mediated living. This is also a good moment to acknowledge what you've built over twenty days. The habits, the awareness, the growing ease with silence — none of that is small.",
       },
       {
         day: 21,
@@ -289,7 +289,7 @@ export const planData: Week[] = [
           "30-minute meditation or silent sit",
           "Before bed, write about this day by candlelight or lamplight",
         ],
-        coachIntro: "This is the big one. A full day without any digital input. Three weeks ago this might have felt impossible — now you have the skills. Trust yourself, fill the day with what matters, and write about it by lamplight tonight.",
+        coachIntro: "This is the culmination of three weeks of practice. A full day — wake to sleep — without your phone. Three weeks ago, this might have felt impossible. Now you have the boredom tolerance, the analog hobbies, the morning and evening rituals, the meditation practice, and the self-awareness to handle it.\n\nDon't try to make this day productive. Let it be slow, physical, and present. Cook something elaborate. Walk somewhere beautiful. Have a real conversation. Sit and do nothing for a while. The 30-minute meditation today can be your anchor point. Before bed, write about this day by candlelight or lamplight — no screens, even for journaling. You're proving to yourself that a full day of analog living isn't just survivable; it's rich.",
       },
     ],
   },
@@ -313,7 +313,7 @@ export const planData: Week[] = [
           "20-minute meditation",
           "Share your policy with someone who supports you",
         ],
-        coachIntro: "The final week is about building systems that last. Today you write your personal digital policy — not rigid rules, but clear intentions. This becomes your compass when the reset ends and real life resumes.",
+        coachIntro: "Welcome to the final week. The first three weeks were about breaking patterns and building awareness. This week is about architecture — designing the systems, structures, and identity that will carry these changes beyond Day 30. Without this week, a reset is just a detox that fades. With it, you're building a new way of living.\n\nToday you write your personal digital policy. This isn't a list of rigid rules — it's a clear set of intentions. When will you use your phone? For how long? What for? Which apps have earned their place, and which stay deleted? Think of it as a constitution for your digital life. Writing it down makes it real, and sharing it with someone who supports you makes it accountable.\n\nThe apps you let back in should pass a simple test: does this genuinely serve my life, or does it just fill time?",
       },
       {
         day: 23,
@@ -324,7 +324,7 @@ export const planData: Week[] = [
           "20-minute meditation",
           "Journal: What relationships have improved during this reset?",
         ],
-        coachIntro: "Change sticks when it's supported. Today you build accountability structures — people and systems that help you stay on track. The reset ends soon, but these relationships carry the work forward.",
+        coachIntro: "Research on behavior change is unanimous on one point: social support is the strongest predictor of whether a new habit sticks. People who go it alone relapse at much higher rates than those who have even one accountability partner.\n\nToday you build that structure. It could be a friend who checks in weekly, a partner who shares the commitment, or a small group that meets regularly. You also honestly evaluate your online communities — some genuinely support growth, while others are just another form of consumption dressed up as connection. The journal question tonight asks what relationships have improved during this reset. The answer usually reveals who your real support network is.",
       },
       {
         day: 24,
@@ -335,7 +335,7 @@ export const planData: Week[] = [
           "20-minute meditation",
           "Design your physical environment to support focus (remove TVs from bedroom, etc.)",
         ],
-        coachIntro: "Willpower fades, but environment endures. Today you engineer friction into the places where temptation lives. A phone that's hard to misuse protects you on the days when motivation is low.",
+        coachIntro: "Willpower is a depletable resource — it's weakest when you're tired, stressed, or emotional, which is exactly when you're most likely to reach for your phone. Environment design solves this by making the right choice the easy choice and the wrong choice hard.\n\nToday you re-engineer your phone: only essential apps on the home screen, tempting apps buried or deleted, time limits set, auto-play disabled. You also look at your physical space — is there a TV in your bedroom? Are chargers in the wrong places? Every small friction point you add protects future-you from present-moment weakness. The goal is a phone that's useful but boring, and a home that invites presence.",
       },
       {
         day: 25,
@@ -346,7 +346,7 @@ export const planData: Week[] = [
           "20-minute meditation",
           "Practice both rituals today with full intention",
         ],
-        coachIntro: "Your morning and evening rituals are the bookends that hold each day together. Today you write them down — not as experiments, but as commitments. These are the practices you keep beyond Day 30.",
+        coachIntro: "Over the past three and a half weeks, you've experimented with morning and evening routines. Some elements stuck, others didn't. Today you formalize both — writing down the exact sequence you want to keep as permanent practice.\n\nYour morning ritual is the container that protects your first hour. Your evening ritual is the wind-down that protects your sleep. Together they bookend each day with intention. Write them down specifically: not \"do some stretching\" but \"5 minutes of stretching in the living room before coffee.\" Specificity turns aspirations into habits. Practice both today with full attention — this is the dress rehearsal for the rest of your life.",
       },
       {
         day: 26,
@@ -357,7 +357,7 @@ export const planData: Week[] = [
           "20-minute meditation",
           "Phone-free dinner with someone you care about",
         ],
-        coachIntro: "Lasting change isn't about what you do — it's about who you become. Today you write your identity narrative. When your self-image aligns with your habits, willpower becomes unnecessary.",
+        coachIntro: "The most powerful predictor of lasting behavior change isn't motivation or willpower — it's identity. When you see yourself as \"someone who doesn't scroll mindlessly,\" the decision is already made before the trigger arrives. You don't have to resist because the behavior simply isn't who you are.\n\nToday you write your identity narrative: \"I am the kind of person who...\" This isn't positive thinking — it's aligning your self-image with the evidence of the last 26 days. You also check your values against your phone use. When there's a gap between what you value and how you spend your time, that gap is where dissatisfaction lives. Tonight's phone-free dinner is a chance to practice being the person you've described.",
       },
       {
         day: 27,
@@ -368,7 +368,7 @@ export const planData: Week[] = [
           "20-minute meditation",
           "Journal: How do you handle discomfort now vs. 27 days ago?",
         ],
-        coachIntro: "Today you stress-test your new wiring. Instead of avoiding triggers, you walk toward one intentionally. You also write your relapse protocol — because slips are human, and having a plan makes them temporary.",
+        coachIntro: "For the past four weeks you've been building new neural pathways while avoiding situations that test them. Today you deliberately face a trigger — not to prove something, but to see how your response has changed. Walk toward the situation that used to make you grab your phone and notice what happens in your body and mind. You might be surprised by how different it feels.\n\nYou're also writing your relapse protocol. This is crucial. Slips will happen — a stressful day, a boring evening, a moment of weakness. Having a pre-written plan (\"When I slip, I will: put the phone down, take three breaths, journal what triggered it, and start fresh tomorrow\") turns a potential spiral into a brief detour.",
       },
       {
         day: 28,
@@ -379,7 +379,7 @@ export const planData: Week[] = [
           "25-minute meditation",
           "Long phone-free walk — a walking meditation of gratitude",
         ],
-        coachIntro: "Gratitude rewires your brain toward noticing what's already good. Today you name what this reset has given you and consciously release what no longer serves you. Both acts make room for what comes next.",
+        coachIntro: "Gratitude isn't just a feel-good exercise — neuroimaging studies show it literally changes which neural pathways fire by default. Regular gratitude practice shifts your brain from scanning for threats and problems to noticing what's already working. Today you write down ten specific things this reset has given you.\n\nYou're also practicing the equally important skill of letting go. Write down what you're releasing: the compulsive checking, the endless scrolling, the background anxiety of always being available. Naming what you release makes the release concrete. The walking meditation of gratitude tonight ties both practices together — you're walking away from old patterns and toward the life you've been building.",
       },
       {
         day: 29,
@@ -390,7 +390,7 @@ export const planData: Week[] = [
           "30-minute meditation",
           "Write a letter to your future self for when things get hard",
         ],
-        coachIntro: "Your final digital sabbath. This time it's not a challenge — it's a choice. The letter you write to your future self is an anchor. When temptation comes (and it will), you'll have your own words to hold onto.",
+        coachIntro: "Your final digital sabbath. Notice how different this one feels compared to Day 21. The first time was a challenge to survive. This time it should feel closer to a choice — something you do because the alternative (constant connectivity) is less appealing than it used to be.\n\nThe most important action today is the letter to your future self. Write it for the hardest moment you'll face after this reset ends — a boring Sunday, a stressful week, a lonely evening when scrolling feels like the only option. Your own words, written from a place of strength and clarity, will be the most powerful thing you can reach for in that moment. Be specific, be honest, be kind to the person you'll be.",
       },
       {
         day: 30,
@@ -402,7 +402,7 @@ export const planData: Week[] = [
           "Write your 'going forward' commitment — not rules, but intentions",
           "Celebrate in a way that feels true to who you've become",
         ],
-        coachIntro: "Day 30. You did something most people only talk about. Read your Day 1 entry and feel the distance. This isn't an ending — it's a beginning. The person who started this journey and the person finishing it are not the same.",
+        coachIntro: "Day 30. You did something that most people only talk about wanting to do. Thirty consecutive days of intentional, disciplined, honest work on your relationship with technology. That deserves to be acknowledged — not loudly, but deeply.\n\nRead your Day 1 journal entry first thing today. The distance between who wrote that entry and who is reading it now is the entire point of this reset. Then sit with the longest meditation of the program. Let everything you've learned settle.\n\nYour \"going forward\" commitment isn't a list of rules. It's a set of intentions grounded in who you've become. Write it as a letter to yourself, not as a contract. And celebrate tonight — not with consumption, but in a way that feels true to the person you are now. A quiet dinner, a long walk, a conversation with someone who matters. You've earned every bit of this.",
       },
     ],
   },
