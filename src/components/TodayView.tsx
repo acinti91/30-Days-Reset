@@ -105,7 +105,7 @@ export default function TodayView({ currentDay, allCheckIns, onSaveCheckIn, onOp
     }
   }, [allCheckIns, today]);
 
-  // Fetch action completions
+  // Fetch action completions for today
   useEffect(() => {
     fetch(`/api/actions?date=${today}&day=${currentDay}`)
       .then((r) => r.json())
@@ -113,6 +113,25 @@ export default function TodayView({ currentDay, allCheckIns, onSaveCheckIn, onOp
         const map: Record<number, number> = {};
         rows.forEach((r) => (map[r.action_index] = r.completed));
         setActionCompletions(map);
+      })
+      .catch(() => {});
+  }, [today, currentDay]);
+
+  // Yesterday's action completions
+  const [yesterdayActionCompletions, setYesterdayActionCompletions] = useState<Record<number, number>>({});
+  const yesterdayDayData = useMemo(() => getDayData(currentDay - 1), [currentDay]);
+
+  useEffect(() => {
+    if (currentDay < 2) return;
+    const d = new Date(today + "T12:00:00");
+    d.setDate(d.getDate() - 1);
+    const yDate = d.toISOString().split("T")[0];
+    fetch(`/api/actions?date=${yDate}&day=${currentDay - 1}`)
+      .then((r) => r.json())
+      .then((rows: { action_index: number; completed: number }[]) => {
+        const map: Record<number, number> = {};
+        rows.forEach((r) => (map[r.action_index] = r.completed));
+        setYesterdayActionCompletions(map);
       })
       .catch(() => {});
   }, [today, currentDay]);
@@ -216,6 +235,8 @@ export default function TodayView({ currentDay, allCheckIns, onSaveCheckIn, onOp
           currentDay={currentDay}
           yesterday={yesterday}
           streaks={streaks}
+          yesterdayActions={yesterdayDayData?.day.actions ?? []}
+          yesterdayActionCompletions={yesterdayActionCompletions}
           onDismiss={dismissMorningReview}
           onSaveYesterday={handleSaveYesterday}
         />

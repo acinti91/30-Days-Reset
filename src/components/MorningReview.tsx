@@ -8,6 +8,8 @@ interface Props {
   currentDay: number;
   yesterday: CheckIn | null;
   streaks: Record<string, number>;
+  yesterdayActions: string[];
+  yesterdayActionCompletions: Record<number, number>;
   onDismiss: () => void;
   onSaveYesterday: (habits: Record<string, number>) => void;
 }
@@ -32,7 +34,7 @@ const STREAK_SHORT_LABELS: Record<string, string> = {
 
 const HABIT_KEYS = Object.keys(HABIT_LABELS);
 
-export default function MorningReview({ currentDay, yesterday, streaks, onDismiss, onSaveYesterday }: Props) {
+export default function MorningReview({ currentDay, yesterday, streaks, yesterdayActions, yesterdayActionCompletions, onDismiss, onSaveYesterday }: Props) {
   const activeStreaks = Object.entries(streaks).filter(([, v]) => v > 0);
   const quote = getQuoteForDay(currentDay);
 
@@ -89,8 +91,43 @@ export default function MorningReview({ currentDay, yesterday, streaks, onDismis
           </p>
         </div>
 
-        {/* Yesterday's habits — interactive */}
         <div className="space-y-6">
+          {/* Yesterday's actions — read-only review */}
+          {yesterdayActions.length > 0 && (
+            <div className="space-y-2">
+              <p className="text-text-secondary text-xs uppercase tracking-widest">
+                Yesterday&apos;s actions
+              </p>
+              <div className="space-y-1.5">
+                {yesterdayActions.map((action, i) => {
+                  const done = (yesterdayActionCompletions[i] ?? 0) > 0;
+                  return (
+                    <div
+                      key={i}
+                      className={`w-full flex items-center gap-2 text-sm py-2.5 px-3 rounded-lg ${
+                        done
+                          ? "text-foreground bg-accent/5"
+                          : "text-text-secondary/60"
+                      }`}
+                    >
+                      {done ? (
+                        <svg className="w-4 h-4 text-accent shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+                        </svg>
+                      ) : (
+                        <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <circle cx="12" cy="12" r="9" />
+                        </svg>
+                      )}
+                      <span className="text-left">{action}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Yesterday's habits — interactive */}
           <div className="space-y-2">
             <p className="text-text-secondary text-xs uppercase tracking-widest">
               Yesterday&apos;s habits
