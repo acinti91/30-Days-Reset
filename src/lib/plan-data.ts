@@ -2,7 +2,17 @@ export interface Day {
   day: number;
   focus: string[];
   actions: string[];
+  coachIntro: string;
 }
+
+export const HABIT_INTRO_DAY: Record<string, number> = {
+  phone_out_bedroom: 1,
+  morning_phone_free: 2,
+  boredom_minutes: 2,
+  phone_free_walk: 3,
+  evening_journal: 2,
+  meditation_minutes: 5,
+};
 
 export interface Week {
   week: number;
@@ -33,6 +43,7 @@ export const planData: Week[] = [
           "Each time you reach for your phone, pause and note what triggered the urge",
           "5 minutes of sitting in silence before bed",
         ],
+        coachIntro: "Today is about one thing: creating physical distance between you and your phone at night. The bedroom is where your brain recovers — protecting that space is the foundation everything else builds on.",
       },
       {
         day: 2,
@@ -43,6 +54,7 @@ export const planData: Week[] = [
           "Journal one paragraph about how yesterday felt without the phone in bed",
           "10 minutes of boredom sitting — no input, just presence",
         ],
+        coachIntro: "Yesterday you reclaimed your bedroom. Today you reclaim your morning. The first hour after waking is when your brain is most impressionable — what you do with it shapes the entire day.",
       },
       {
         day: 3,
@@ -53,6 +65,7 @@ export const planData: Week[] = [
           "15 minutes of boredom sitting",
           "Take a 20-minute walk without your phone",
         ],
+        coachIntro: "Notifications are tiny hijacks — each one pulls you out of your own mind. Today you take back control of your attention by silencing what doesn't matter and walking without a screen for the first time.",
       },
       {
         day: 4,
@@ -63,6 +76,7 @@ export const planData: Week[] = [
           "15 minutes boredom sitting",
           "Write down your three biggest phone triggers",
         ],
+        coachIntro: "Color is one of the main hooks your phone uses to grab attention. Grayscale makes your screen boring on purpose — and boring is exactly what we want right now. Today you also start surfing urges instead of obeying them.",
       },
       {
         day: 5,
@@ -73,6 +87,7 @@ export const planData: Week[] = [
           "Phone-free lunch — eat slowly, taste the food",
           "15 minutes boredom sitting",
         ],
+        coachIntro: "Today you add a powerful new tool: meditation. You've been sitting with boredom — meditation takes that further by training your attention deliberately. You're also checking your screen time baseline so you can see change over time.",
       },
       {
         day: 6,
@@ -83,6 +98,7 @@ export const planData: Week[] = [
           "10-minute meditation",
           "Evening journal: What did you notice without social media?",
         ],
+        coachIntro: "Social media is engineered for compulsive use. Today you step away from it entirely. The discomfort you feel is the gap between stimulation and satisfaction — movement helps you close it naturally.",
       },
       {
         day: 7,
@@ -93,6 +109,7 @@ export const planData: Week[] = [
           "10-minute meditation",
           "Write a letter to yourself about what you've observed this week",
         ],
+        coachIntro: "One week down. Today is for looking back with honesty and resting with intention. The letter you write to yourself is a snapshot of who you are right now — you'll be glad you captured it.",
       },
     ],
   },
@@ -116,6 +133,7 @@ export const planData: Week[] = [
           "15-minute meditation",
           "Journal about what you chose to do and how it felt",
         ],
+        coachIntro: "Week 2 begins. You've created distance — now you fill the space. Today's two-hour block is your first taste of extended analog living. Notice what you reach for when the phone isn't an option.",
       },
       {
         day: 9,
@@ -126,6 +144,7 @@ export const planData: Week[] = [
           "15-minute meditation",
           "20 minutes boredom sitting",
         ],
+        coachIntro: "Eating without screens is one of the simplest ways to practice presence. You're also stretching your morning container — 90 minutes of undistracted waking sets a powerful tone.",
       },
       {
         day: 10,
@@ -136,6 +155,7 @@ export const planData: Week[] = [
           "15-minute meditation",
           "Write about what's getting easier and what's still hard",
         ],
+        coachIntro: "One-third of the way. That's not nothing — that's ten days of choosing differently. Today, bring your presence into a conversation and notice how much richer it feels when no one is half-somewhere-else.",
       },
       {
         day: 11,
@@ -146,6 +166,7 @@ export const planData: Week[] = [
           "15-minute meditation",
           "Notice: what did you actually miss by not reading the news?",
         ],
+        coachIntro: "News feeds are designed to make everything feel urgent. Today you test whether that urgency is real. Spoiler: most of it isn't. Spend time in nature instead and let your nervous system remember what calm feels like.",
       },
       {
         day: 12,
@@ -156,6 +177,7 @@ export const planData: Week[] = [
           "15-minute meditation",
           "Phone goes to charging station by 9 PM",
         ],
+        coachIntro: "Consumption depletes dopamine; creation replenishes it. Today you shift from passive input to active output. The evening ritual you design tonight will protect your sleep for the rest of the reset.",
       },
       {
         day: 13,
@@ -166,6 +188,7 @@ export const planData: Week[] = [
           "15-minute meditation",
           "Journal: What ideas or memories surfaced during boredom?",
         ],
+        coachIntro: "Boredom isn't emptiness — it's a doorway. When you stop filling every moment, your mind starts producing its own material: ideas, memories, connections. Today's longer sit gives that process room to breathe.",
       },
       {
         day: 14,
@@ -176,6 +199,7 @@ export const planData: Week[] = [
           "15-minute meditation",
           "Check screen time — compare to Day 5 baseline",
         ],
+        coachIntro: "Two weeks in. Check your screen time and compare it to your Day 5 baseline — the number tells a story. Today is about seeing your progress clearly and preparing for the deeper work of Week 3.",
       },
     ],
   },
@@ -199,6 +223,7 @@ export const planData: Week[] = [
           "20-minute meditation",
           "Evening journal: Who are you becoming?",
         ],
+        coachIntro: "Halfway. You've earned a celebration — not through consumption, but through presence. Today's half-day sabbath is a preview of what sustainable digital freedom feels like. Six hours, no phone, full living.",
       },
       {
         day: 16,
@@ -209,6 +234,7 @@ export const planData: Week[] = [
           "20-minute meditation",
           "Practice being fully present in one conversation today",
         ],
+        coachIntro: "Phones promise connection but often deliver isolation. Today you take inventory of your real relationships and reach out to someone in person. Presence is the greatest gift you can give another human.",
       },
       {
         day: 17,
@@ -219,6 +245,7 @@ export const planData: Week[] = [
           "20-minute meditation",
           "Notice how single-tasking affects your energy and focus",
         ],
+        coachIntro: "Multitasking is a myth — your brain just switches rapidly between things, draining energy each time. Today you practice single-tasking and batched email. The clarity might surprise you.",
       },
       {
         day: 18,
@@ -229,6 +256,7 @@ export const planData: Week[] = [
           "20-minute meditation",
           "Phone-free walk, practicing your alternative responses mentally",
         ],
+        coachIntro: "Understanding your triggers is the difference between reacting and choosing. Today you map the emotional patterns that drive phone use and design intentional alternatives for each one.",
       },
       {
         day: 19,
@@ -239,6 +267,7 @@ export const planData: Week[] = [
           "Cook a meal in silence, focusing entirely on the process",
           "Journal about what silence teaches you",
         ],
+        coachIntro: "Silence used to be normal. Now it feels radical. Today you practice extended stillness and let your mind settle fully. The insights that arise in deep quiet are often the ones that matter most.",
       },
       {
         day: 20,
@@ -249,6 +278,7 @@ export const planData: Week[] = [
           "20-minute meditation",
           "Stock up: books, art supplies, ingredients for cooking, walking shoes",
         ],
+        coachIntro: "Twenty days of intentional living. Tomorrow you go fully offline for an entire day — today is about preparing so that day feels spacious rather than anxious. Stock your analog toolkit.",
       },
       {
         day: 21,
@@ -259,6 +289,7 @@ export const planData: Week[] = [
           "30-minute meditation or silent sit",
           "Before bed, write about this day by candlelight or lamplight",
         ],
+        coachIntro: "This is the big one. A full day without any digital input. Three weeks ago this might have felt impossible — now you have the skills. Trust yourself, fill the day with what matters, and write about it by lamplight tonight.",
       },
     ],
   },
@@ -282,6 +313,7 @@ export const planData: Week[] = [
           "20-minute meditation",
           "Share your policy with someone who supports you",
         ],
+        coachIntro: "The final week is about building systems that last. Today you write your personal digital policy — not rigid rules, but clear intentions. This becomes your compass when the reset ends and real life resumes.",
       },
       {
         day: 23,
@@ -292,6 +324,7 @@ export const planData: Week[] = [
           "20-minute meditation",
           "Journal: What relationships have improved during this reset?",
         ],
+        coachIntro: "Change sticks when it's supported. Today you build accountability structures — people and systems that help you stay on track. The reset ends soon, but these relationships carry the work forward.",
       },
       {
         day: 24,
@@ -302,6 +335,7 @@ export const planData: Week[] = [
           "20-minute meditation",
           "Design your physical environment to support focus (remove TVs from bedroom, etc.)",
         ],
+        coachIntro: "Willpower fades, but environment endures. Today you engineer friction into the places where temptation lives. A phone that's hard to misuse protects you on the days when motivation is low.",
       },
       {
         day: 25,
@@ -312,6 +346,7 @@ export const planData: Week[] = [
           "20-minute meditation",
           "Practice both rituals today with full intention",
         ],
+        coachIntro: "Your morning and evening rituals are the bookends that hold each day together. Today you write them down — not as experiments, but as commitments. These are the practices you keep beyond Day 30.",
       },
       {
         day: 26,
@@ -322,6 +357,7 @@ export const planData: Week[] = [
           "20-minute meditation",
           "Phone-free dinner with someone you care about",
         ],
+        coachIntro: "Lasting change isn't about what you do — it's about who you become. Today you write your identity narrative. When your self-image aligns with your habits, willpower becomes unnecessary.",
       },
       {
         day: 27,
@@ -332,6 +368,7 @@ export const planData: Week[] = [
           "20-minute meditation",
           "Journal: How do you handle discomfort now vs. 27 days ago?",
         ],
+        coachIntro: "Today you stress-test your new wiring. Instead of avoiding triggers, you walk toward one intentionally. You also write your relapse protocol — because slips are human, and having a plan makes them temporary.",
       },
       {
         day: 28,
@@ -342,6 +379,7 @@ export const planData: Week[] = [
           "25-minute meditation",
           "Long phone-free walk — a walking meditation of gratitude",
         ],
+        coachIntro: "Gratitude rewires your brain toward noticing what's already good. Today you name what this reset has given you and consciously release what no longer serves you. Both acts make room for what comes next.",
       },
       {
         day: 29,
@@ -352,6 +390,7 @@ export const planData: Week[] = [
           "30-minute meditation",
           "Write a letter to your future self for when things get hard",
         ],
+        coachIntro: "Your final digital sabbath. This time it's not a challenge — it's a choice. The letter you write to your future self is an anchor. When temptation comes (and it will), you'll have your own words to hold onto.",
       },
       {
         day: 30,
@@ -363,6 +402,7 @@ export const planData: Week[] = [
           "Write your 'going forward' commitment — not rules, but intentions",
           "Celebrate in a way that feels true to who you've become",
         ],
+        coachIntro: "Day 30. You did something most people only talk about. Read your Day 1 entry and feel the distance. This isn't an ending — it's a beginning. The person who started this journey and the person finishing it are not the same.",
       },
     ],
   },

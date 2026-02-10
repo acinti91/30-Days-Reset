@@ -3,11 +3,18 @@
 import { useState } from "react";
 import { planData } from "@/lib/plan-data";
 
-export default function PlanView({ currentDay }: { currentDay: number }) {
+interface PlanViewProps {
+  currentDay: number;
+  onDaySelect?: (day: number) => void;
+}
+
+export default function PlanView({ currentDay, onDaySelect }: PlanViewProps) {
   const [expandedWeek, setExpandedWeek] = useState<number | null>(() => {
     const week = planData.find((w) => w.days.some((d) => d.day === currentDay));
     return week?.week ?? 1;
   });
+
+  const [expandedDay, setExpandedDay] = useState<number | null>(null);
 
   return (
     <div className="px-5 pt-8 pb-28 max-w-lg mx-auto space-y-6">
@@ -84,11 +91,14 @@ export default function PlanView({ currentDay }: { currentDay: number }) {
                     {week.days.map((day) => {
                       const isPast = day.day < currentDay;
                       const isCurrent = day.day === currentDay;
+                      const isUnlocked = isPast || isCurrent;
+                      const isDayExpanded = expandedDay === day.day;
 
                       return (
                         <div
                           key={day.day}
-                          className={`rounded-lg p-4 ${
+                          onClick={() => setExpandedDay(isDayExpanded ? null : day.day)}
+                          className={`rounded-lg p-4 cursor-pointer hover:ring-1 hover:ring-accent/30 transition-all ${
                             isCurrent
                               ? "bg-accent/10 border border-accent/20"
                               : "bg-surface-light"
@@ -115,6 +125,15 @@ export default function PlanView({ currentDay }: { currentDay: number }) {
                                 <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
                               </svg>
                             )}
+                            <svg
+                                className={`w-4 h-4 text-text-secondary ml-auto transition-transform ${isDayExpanded ? "rotate-180" : ""}`}
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                              >
+                                <path d="M6 9l6 6 6-6" />
+                              </svg>
                           </div>
                           <div className="space-y-1">
                             {day.focus.map((f, i) => (
@@ -128,6 +147,34 @@ export default function PlanView({ currentDay }: { currentDay: number }) {
                               </p>
                             ))}
                           </div>
+
+                          {/* Expanded actions */}
+                          {isDayExpanded && (
+                            <div className="mt-3 pt-3 border-t border-surface-light/50 space-y-2" onClick={(e) => e.stopPropagation()}>
+                              <p className="text-xs uppercase tracking-widest text-text-secondary">
+                                Actions
+                              </p>
+                              {day.actions.map((action, i) => (
+                                <div key={i} className="flex gap-2 items-start">
+                                  <div className="w-1 h-1 rounded-full bg-accent/50 mt-2 shrink-0" />
+                                  <p className={`text-sm ${isPast ? "text-text-secondary" : "text-foreground"}`}>
+                                    {action}
+                                  </p>
+                                </div>
+                              ))}
+                              {isUnlocked && onDaySelect && (
+                                <button
+                                  onClick={() => onDaySelect(day.day)}
+                                  className="mt-2 text-accent text-xs hover:text-accent-muted transition-colors flex items-center gap-1 cursor-pointer"
+                                >
+                                  View Day {day.day} overview
+                                  <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                    <path d="M9 5l7 7-7 7" />
+                                  </svg>
+                                </button>
+                              )}
+                            </div>
+                          )}
                         </div>
                       );
                     })}

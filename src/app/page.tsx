@@ -24,11 +24,21 @@ export default function Home() {
   } = useApp();
 
   const [autoGreet, setAutoGreet] = useState(false);
+  const [viewingDay, setViewingDay] = useState<number | null>(null);
 
   const openChatFromToday = useCallback(() => {
     setAutoGreet(true);
     setActiveTab("chat");
   }, [setActiveTab]);
+
+  const handleDaySelect = useCallback((day: number) => {
+    setViewingDay(day);
+    setActiveTab("today");
+  }, [setActiveTab]);
+
+  const handleDayChange = useCallback((day: number | null) => {
+    setViewingDay(day);
+  }, []);
 
   if (loading) {
     return (
@@ -49,19 +59,22 @@ export default function Home() {
         {activeTab === "today" && (
           <TodayView
             currentDay={currentDay}
+            viewingDay={viewingDay}
+            startDate={startDate}
             allCheckIns={checkIns}
             onSaveCheckIn={saveCheckIn}
             onOpenChat={openChatFromToday}
+            onDayChange={handleDayChange}
           />
         )}
-        {activeTab === "plan" && <PlanView currentDay={currentDay} />}
+        {activeTab === "plan" && <PlanView currentDay={currentDay} onDaySelect={handleDaySelect} />}
         {activeTab === "chat" && <ChatView autoGreet={autoGreet} />}
         {activeTab === "progress" && (
           <ProgressView currentDay={currentDay} checkIns={checkIns} />
         )}
         {activeTab === "toolkit" && <ToolkitView />}
       </div>
-      <Navigation activeTab={activeTab} onTabChange={(tab) => { setAutoGreet(false); setActiveTab(tab); }} />
+      <Navigation activeTab={activeTab} onTabChange={(tab) => { setAutoGreet(false); if (tab === "today") setViewingDay(null); setActiveTab(tab); }} />
     </main>
   );
 }

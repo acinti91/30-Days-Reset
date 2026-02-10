@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import type { CheckIn } from "@/lib/db";
 import { getQuoteForDay } from "@/lib/stoic-quotes";
+import { HABIT_INTRO_DAY } from "@/lib/plan-data";
 
 interface Props {
   currentDay: number;
@@ -10,6 +11,7 @@ interface Props {
   streaks: Record<string, number>;
   yesterdayActions: string[];
   yesterdayActionCompletions: Record<number, number>;
+  todayCoachIntro: string;
   onDismiss: () => void;
   onSaveYesterday: (habits: Record<string, number>) => void;
 }
@@ -34,19 +36,38 @@ const STREAK_SHORT_LABELS: Record<string, string> = {
 
 const HABIT_KEYS = Object.keys(HABIT_LABELS);
 
-export default function MorningReview({ currentDay, yesterday, streaks, yesterdayActions, yesterdayActionCompletions, onDismiss, onSaveYesterday }: Props) {
+export default function MorningReview({ currentDay, yesterday, streaks, yesterdayActions, yesterdayActionCompletions, todayCoachIntro, onDismiss, onSaveYesterday }: Props) {
   const activeStreaks = Object.entries(streaks).filter(([, v]) => v > 0);
   const quote = getQuoteForDay(currentDay);
+
+  // Only show habits that were active yesterday (currentDay - 1)
+  const yesterdayDay = currentDay - 1;
+  const activeHabitKeys = HABIT_KEYS.filter(
+    (key) => (HABIT_INTRO_DAY[key] ?? 1) <= yesterdayDay
+  );
 
   // Local state for yesterday's habits — initialized from prop or defaults
   const [habits, setHabits] = useState<Record<string, number>>(() => {
     const init: Record<string, number> = {};
-    for (const key of HABIT_KEYS) {
+    for (const key of activeHabitKeys) {
       const val = yesterday?.[key as keyof CheckIn];
       init[key] = typeof val === "number" ? val : 0;
     }
     return init;
   });
+
+  // Sync habits when yesterday prop loads asynchronously
+  useEffect(() => {
+    if (!yesterday) return;
+    setHabits(() => {
+      const init: Record<string, number> = {};
+      for (const key of activeHabitKeys) {
+        const val = yesterday[key as keyof CheckIn];
+        init[key] = typeof val === "number" ? val : 0;
+      }
+      return init;
+    });
+  }, [yesterday, activeHabitKeys]);
 
   const [editingField, setEditingField] = useState<string | null>(null);
   const [editValue, setEditValue] = useState("");
@@ -133,7 +154,7 @@ export default function MorningReview({ currentDay, yesterday, streaks, yesterda
               Yesterday&apos;s habits
             </p>
             <div className="space-y-1.5">
-              {HABIT_KEYS.map((key) => {
+              {activeHabitKeys.map((key) => {
                 const { label, mode, unit } = HABIT_LABELS[key];
                 const val = habits[key];
                 const done = val > 0;
@@ -211,6 +232,17 @@ export default function MorningReview({ currentDay, yesterday, streaks, yesterda
             </div>
           )}
         </div>
+
+        {todayCoachIntro && (
+          <div className="space-y-2 text-left">
+            <p className="text-text-secondary text-xs uppercase tracking-widest text-center">
+              What today is about
+            </p>
+            <p className="text-foreground text-sm leading-relaxed italic">
+              {todayCoachIntro}
+            </p>
+          </div>
+        )}
 
         <button
           onClick={handleDismiss}

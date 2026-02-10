@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo, useCallback } from "react";
-import { getDayData } from "@/lib/plan-data";
+import { getDayData, HABIT_INTRO_DAY } from "@/lib/plan-data";
 import type { CheckIn } from "@/lib/db";
 import { getAllStreaks } from "@/lib/streaks";
 import MorningReview from "./MorningReview";
@@ -10,9 +10,12 @@ import EveningReflection from "./EveningReflection";
 
 interface Props {
   currentDay: number;
+  viewingDay: number | null;
+  startDate: string;
   allCheckIns: CheckIn[];
   onSaveCheckIn: (data: Omit<CheckIn, "id" | "created_at">) => void;
   onOpenChat: () => void;
+  onDayChange: (day: number | null) => void;
 }
 
 const HABITS = [
@@ -66,20 +69,35 @@ function SaveProgress({ completedCount, totalCount }: { completedCount: number; 
   );
 }
 
-export default function TodayView({ currentDay, allCheckIns, onSaveCheckIn, onOpenChat }: Props) {
+export default function TodayView({ currentDay, viewingDay, startDate, allCheckIns, onSaveCheckIn, onOpenChat, onDayChange }: Props) {
+  const displayDay = viewingDay ?? currentDay;
+  const isPastDay = displayDay < currentDay;
+
+  // Compute the calendar date for displayDay from startDate
+  const displayDate = useMemo(() => {
+    const d = new Date(startDate + "T12:00:00");
+    d.setDate(d.getDate() + (displayDay - 1));
+    return d.toISOString().split("T")[0];
+  }, [startDate, displayDay]);
+
   const today = new Date().toISOString().split("T")[0];
-  const dayData = getDayData(currentDay);
+  const dayData = getDayData(displayDay);
+
+  // Filter habits to only show those unlocked by the current display day
+  const activeHabits = HABITS.filter(
+    (h) => (HABIT_INTRO_DAY[h.field] ?? 1) <= displayDay
+  );
 
   // Action completions state
   const [actionCompletions, setActionCompletions] = useState<Record<number, number>>({});
 
-  // Local check-in state — the single source of truth for the current day
+  // Local check-in state — the single source of truth for the displayed day
   const [localCheckIn, setLocalCheckIn] = useState<Omit<CheckIn, "id" | "created_at">>({
-    date: today,
+    date: displayDate,
     ...DEFAULT_CHECKIN,
   });
 
-  // Morning review visibility
+  // Morning review visibility (only for current day)
   const [showMorningReview, setShowMorningReview] = useState(() => {
     if (typeof window === "undefined") return false;
     return !sessionStorage.getItem(`morning-review-dismissed-${today}`);
@@ -87,7 +105,7 @@ export default function TodayView({ currentDay, allCheckIns, onSaveCheckIn, onOp
 
   // Initialize local state from existing check-in data
   useEffect(() => {
-    const existing = allCheckIns.find((c) => c.date === today);
+    const existing = allCheckIns.find((c) => c.date === displayDate);
     if (existing) {
       setLocalCheckIn({
         date: existing.date,
@@ -100,14 +118,16 @@ export default function TodayView({ currentDay, allCheckIns, onSaveCheckIn, onOp
         hardest: existing.hardest,
         noticed: existing.noticed,
       });
-      // If already checked in today, don't show morning review
-      setShowMorningReview(false);
+      if (!isPastDay) setShowMorningReview(false);
+    } else {
+      // Reset to defaults when switching to a day with no check-in
+      setLocalCheckIn({ date: displayDate, ...DEFAULT_CHECKIN });
     }
-  }, [allCheckIns, today]);
+  }, [allCheckIns, displayDate, isPastDay]);
 
-  // Fetch action completions for today
+  // Fetch action completions for displayed day
   useEffect(() => {
-    fetch(`/api/actions?date=${today}&day=${currentDay}`)
+    fetch(`/api/actions?date=${displayDate}&day=${displayDay}`)
       .then((r) => r.json())
       .then((rows: { action_index: number; completed: number }[]) => {
         const map: Record<number, number> = {};
@@ -115,14 +135,14 @@ export default function TodayView({ currentDay, allCheckIns, onSaveCheckIn, onOp
         setActionCompletions(map);
       })
       .catch(() => {});
-  }, [today, currentDay]);
+  }, [displayDate, displayDay]);
 
-  // Yesterday's action completions
+  // Yesterday's action completions (only needed for current day's morning review)
   const [yesterdayActionCompletions, setYesterdayActionCompletions] = useState<Record<number, number>>({});
   const yesterdayDayData = useMemo(() => getDayData(currentDay - 1), [currentDay]);
 
   useEffect(() => {
-    if (currentDay < 2) return;
+    if (isPastDay || currentDay < 2) return;
     const d = new Date(today + "T12:00:00");
     d.setDate(d.getDate() - 1);
     const yDate = d.toISOString().split("T")[0];
@@ -134,7 +154,7 @@ export default function TodayView({ currentDay, allCheckIns, onSaveCheckIn, onOp
         setYesterdayActionCompletions(map);
       })
       .catch(() => {});
-  }, [today, currentDay]);
+  }, [today, currentDay, isPastDay]);
 
   // Yesterday's check-in
   const yesterday = useMemo(() => {
@@ -153,26 +173,28 @@ export default function TodayView({ currentDay, allCheckIns, onSaveCheckIn, onOp
   // Save helper — merges a field change into local state and persists the full object
   const handleHabitChange = useCallback(
     (field: string, value: number) => {
+      if (isPastDay) return;
       setLocalCheckIn((prev) => {
         const next = { ...prev, [field]: value };
         onSaveCheckIn(next);
         return next;
       });
     },
-    [onSaveCheckIn]
+    [onSaveCheckIn, isPastDay]
   );
 
   const handleActionToggle = useCallback(
     (field: string, value: number) => {
+      if (isPastDay) return;
       const actionIndex = Number(field);
       setActionCompletions((prev) => ({ ...prev, [actionIndex]: value }));
       fetch("/api/actions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ date: today, dayNumber: currentDay, actionIndex, completed: value }),
+        body: JSON.stringify({ date: displayDate, dayNumber: displayDay, actionIndex, completed: value }),
       }).catch(() => {});
     },
-    [today, currentDay]
+    [displayDate, displayDay, isPastDay]
   );
 
   const handleReflectionSave = useCallback(
@@ -215,28 +237,29 @@ export default function TodayView({ currentDay, allCheckIns, onSaveCheckIn, onOp
   if (!dayData) return null;
 
   const { day, week } = dayData;
-  const progress = ((currentDay - 1) / 30) * 100;
+  const progress = ((displayDay - 1) / 30) * 100;
 
   // Count completed habits + actions for today
-  const completedHabits = HABITS.filter(
+  const completedHabits = activeHabits.filter(
     (h) => (localCheckIn[h.field as keyof typeof localCheckIn] as number) > 0
   ).length;
   const completedActions = dayData
     ? dayData.day.actions.filter((_, i) => actionCompletions[i] > 0).length
     : 0;
   const completedCount = completedHabits + completedActions;
-  const totalCount = HABITS.length + (dayData ? dayData.day.actions.length : 0);
+  const totalCount = activeHabits.length + (dayData ? dayData.day.actions.length : 0);
 
   return (
     <>
-      {/* Morning Review Overlay — outside scrollable container, only from Day 2+ */}
-      {showMorningReview && currentDay >= 2 && (
+      {/* Morning Review Overlay — outside scrollable container, only from Day 2+ on current day */}
+      {!isPastDay && showMorningReview && currentDay >= 2 && (
         <MorningReview
           currentDay={currentDay}
           yesterday={yesterday}
           streaks={streaks}
           yesterdayActions={yesterdayDayData?.day.actions ?? []}
           yesterdayActionCompletions={yesterdayActionCompletions}
+          todayCoachIntro={dayData?.day.coachIntro ?? ""}
           onDismiss={dismissMorningReview}
           onSaveYesterday={handleSaveYesterday}
         />
@@ -247,9 +270,10 @@ export default function TodayView({ currentDay, allCheckIns, onSaveCheckIn, onOp
       <div className="space-y-3">
         <div className="flex items-baseline justify-between">
           <h1 className="font-serif text-4xl font-light">
-            Day <span className="text-accent">{currentDay}</span>
+            Day <span className="text-accent">{displayDay}</span>
+            {isPastDay && <span className="text-text-secondary text-lg ml-2">(past)</span>}
           </h1>
-          <span className="text-text-secondary text-sm">{currentDay}/30</span>
+          <span className="text-text-secondary text-sm">{displayDay}/30</span>
         </div>
 
         {/* Progress bar */}
@@ -309,43 +333,81 @@ export default function TodayView({ currentDay, allCheckIns, onSaveCheckIn, onOp
             Daily Habits
           </h2>
           <span className="text-xs text-text-secondary">
-            {completedHabits}/{HABITS.length}
+            {completedHabits}/{activeHabits.length}
           </span>
         </div>
         <div className="space-y-2">
-          {HABITS.map((habit) => (
-            <HabitCard
-              key={habit.field}
-              field={habit.field}
-              label={habit.label}
-              mode={habit.mode}
-              unit={habit.unit}
-              info={habit.info}
-              value={localCheckIn[habit.field as keyof typeof localCheckIn] as number}
-              streak={streaks[habit.field as keyof typeof streaks] ?? 0}
-              onChange={handleHabitChange}
-            />
-          ))}
+          {activeHabits.map((habit) => {
+            const isNew = (HABIT_INTRO_DAY[habit.field] ?? 1) === displayDay;
+            return (
+              <HabitCard
+                key={habit.field}
+                field={habit.field}
+                label={habit.label}
+                mode={habit.mode}
+                unit={habit.unit}
+                info={habit.info}
+                isNew={isNew}
+                value={localCheckIn[habit.field as keyof typeof localCheckIn] as number}
+                streak={streaks[habit.field as keyof typeof streaks] ?? 0}
+                onChange={handleHabitChange}
+              />
+            );
+          })}
         </div>
       </div>
 
-      {/* Evening Reflection */}
-      <EveningReflection
-        hardest={localCheckIn.hardest}
-        noticed={localCheckIn.noticed}
-        onSave={handleReflectionSave}
-      />
+      {/* Evening Reflection — current day only */}
+      {!isPastDay && (
+        <EveningReflection
+          hardest={localCheckIn.hardest}
+          noticed={localCheckIn.noticed}
+          onSave={handleReflectionSave}
+        />
+      )}
 
-      {/* Save Progress */}
-      <SaveProgress completedCount={completedCount} totalCount={totalCount} />
+      {/* Save Progress — current day only */}
+      {!isPastDay && <SaveProgress completedCount={completedCount} totalCount={totalCount} />}
 
-      {/* Talk to Coach */}
-      <button
-        onClick={onOpenChat}
-        className="w-full bg-surface-light hover:bg-surface border border-surface-light text-text-secondary px-5 py-3 rounded-full transition-colors text-sm -mt-4"
-      >
-        Talk to Coach about your day
-      </button>
+      {/* Talk to Coach — current day only */}
+      {!isPastDay && (
+        <button
+          onClick={onOpenChat}
+          className="w-full bg-surface-light hover:bg-surface border border-surface-light text-text-secondary px-5 py-3 rounded-full transition-colors text-sm -mt-4"
+        >
+          Talk to Coach about your day
+        </button>
+      )}
+
+      {/* Prev / Next day navigation */}
+      <div className="flex justify-between items-center pt-2">
+        {displayDay > 1 ? (
+          <button
+            onClick={() => onDayChange(displayDay - 1)}
+            className="text-text-secondary text-sm hover:text-foreground transition-colors"
+          >
+            &larr; Day {displayDay - 1}
+          </button>
+        ) : <span />}
+        {displayDay < currentDay ? (
+          <button
+            onClick={() => onDayChange(displayDay + 1)}
+            className="text-text-secondary text-sm hover:text-foreground transition-colors"
+          >
+            Day {displayDay + 1} &rarr;
+          </button>
+        ) : <span />}
+      </div>
+      {isPastDay && (
+        <div className="text-center">
+          <button
+            onClick={() => onDayChange(null)}
+            className="text-accent text-sm hover:text-accent-muted transition-colors"
+          >
+            Back to today &rarr;
+          </button>
+        </div>
+      )}
       </div>
     </>
   );

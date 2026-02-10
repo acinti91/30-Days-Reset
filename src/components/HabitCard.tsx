@@ -10,10 +10,11 @@ interface Props {
   unit?: string;
   streak?: number;
   info?: string;
+  isNew?: boolean;
   onChange: (field: string, value: number) => void;
 }
 
-export default function HabitCard({ label, field, value, mode, unit, streak = 0, info, onChange }: Props) {
+export default function HabitCard({ label, field, value, mode, unit, streak = 0, info, isNew, onChange }: Props) {
   const [editing, setEditing] = useState(false);
   const [localValue, setLocalValue] = useState(String(value || ""));
   const [showInfo, setShowInfo] = useState(false);
@@ -83,6 +84,13 @@ export default function HabitCard({ label, field, value, mode, unit, streak = 0,
             </span>
           )}
         </span>
+
+        {/* New badge */}
+        {isNew && (
+          <span className="text-[9px] uppercase tracking-widest text-accent bg-accent/10 px-1.5 py-0.5 rounded-full shrink-0">
+            New
+          </span>
+        )}
 
         {/* Done indicator */}
         {completed && mode === "boolean" && (
