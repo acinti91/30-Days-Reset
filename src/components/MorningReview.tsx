@@ -19,7 +19,7 @@ interface Props {
 const HABIT_LABELS: Record<string, { label: string; mode: "boolean" | "numeric"; unit?: string }> = {
   phone_out_bedroom: { label: "Phone out of bedroom", mode: "boolean" },
   morning_phone_free: { label: "Phone-free morning", mode: "boolean" },
-  boredom_minutes: { label: "Practice 10 minutes of boredome", mode: "numeric", unit: "m" },
+  boredom_minutes: { label: "Practice 10 minutes of boredom", mode: "boolean" },
   meditation_minutes: { label: "Meditation", mode: "numeric", unit: "m" },
   phone_free_walk: { label: "Phone-free walk", mode: "boolean" },
   evening_journal: { label: "Evening journal", mode: "boolean" },
@@ -131,15 +131,6 @@ export default function MorningReview({ currentDay, yesterday, streaks, yesterda
                           : "text-text-secondary/60"
                       }`}
                     >
-                      {done ? (
-                        <svg className="w-4 h-4 text-accent shrink-0" viewBox="0 0 24 24" fill="currentColor">
-                          <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
-                        </svg>
-                      ) : (
-                        <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <circle cx="12" cy="12" r="9" />
-                        </svg>
-                      )}
                       <span className="text-left flex-1">{action}</span>
                       {done && (
                         <span className="text-xs text-accent font-medium shrink-0">Done</span>
@@ -177,19 +168,7 @@ export default function MorningReview({ currentDay, yesterday, streaks, yesterda
                         : "text-text-secondary/60 hover:bg-surface-light"
                     }`}
                   >
-                    {done ? (
-                      <svg className="w-4 h-4 text-accent shrink-0" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
-                      </svg>
-                    ) : (
-                      <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <circle cx="12" cy="12" r="9" />
-                      </svg>
-                    )}
                     <span className="flex-1 text-left">{label}</span>
-                    {mode === "boolean" && done && (
-                      <span className="text-xs text-accent font-medium">Done</span>
-                    )}
                     {mode === "numeric" && isEditing ? (
                       <input
                         ref={inputRef}
@@ -203,10 +182,8 @@ export default function MorningReview({ currentDay, yesterday, streaks, yesterda
                         className="w-20 bg-surface-light rounded-lg px-2 py-1 text-sm text-foreground text-center focus:outline-none focus:ring-1 focus:ring-accent"
                       />
                     ) : (
-                      mode === "numeric" && done && (
-                        <span className="text-text-secondary text-xs">
-                          {val}{unit}
-                        </span>
+                      done && (
+                        <span className="text-xs text-accent font-medium">Done</span>
                       )
                     )}
                   </button>

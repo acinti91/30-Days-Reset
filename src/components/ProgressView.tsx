@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import type { CheckIn } from "@/lib/db";
 
 function getCompletionPercent(checkIn: CheckIn): number {
@@ -42,17 +43,26 @@ function Sparkline({ data, color }: { data: number[]; color: string }) {
   );
 }
 
+function getDayNumber(entryDate: string, startDate: string): number {
+  const start = new Date(startDate + "T12:00:00");
+  const entry = new Date(entryDate + "T12:00:00");
+  return Math.round((entry.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+}
+
 export default function ProgressView({
   currentDay,
   checkIns,
+  startDate,
 }: {
   currentDay: number;
   checkIns: CheckIn[];
+  startDate: string;
 }) {
   const checkInMap = new Map(checkIns.map((c) => [c.date, c]));
   const meditationData = checkIns.map((c) => c.meditation_minutes);
   const boredomData = checkIns.map((c) => c.boredom_minutes);
-  const journals = checkIns.filter((c) => c.hardest || c.noticed);
+  const journals = checkIns.filter((c) => c.hardest || c.noticed || c.proud);
+  const [expandedJournal, setExpandedJournal] = useState<string | null>(null);
 
   return (
     <div className="px-5 pt-8 pb-28 max-w-lg mx-auto space-y-8">
@@ -148,26 +158,61 @@ export default function ProgressView({
             Journal Entries
           </h2>
           <div className="space-y-2">
-            {journals.map((entry) => (
-              <div
-                key={entry.date}
-                className="bg-surface rounded-xl p-4 border border-surface-light space-y-2"
-              >
-                <p className="text-xs text-text-secondary">{entry.date}</p>
-                {entry.hardest && (
-                  <div>
-                    <p className="text-xs text-accent mb-0.5">Hardest</p>
-                    <p className="text-sm text-foreground">{entry.hardest}</p>
+            {journals.map((entry) => {
+              const dayNum = getDayNumber(entry.date, startDate);
+              const isExpanded = expandedJournal === entry.date;
+              const previewText = entry.hardest || entry.noticed || entry.proud || "";
+              const preview = previewText.length > 60 ? previewText.slice(0, 60) + "..." : previewText;
+
+              return (
+                <button
+                  key={entry.date}
+                  type="button"
+                  onClick={() => setExpandedJournal(isExpanded ? null : entry.date)}
+                  className="w-full bg-surface rounded-xl border border-surface-light text-left transition-all hover:ring-1 hover:ring-accent/30 cursor-pointer"
+                >
+                  <div className="flex items-center justify-between p-4">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <span className="font-serif text-sm text-accent shrink-0">Day {dayNum}</span>
+                      {!isExpanded && (
+                        <span className="text-xs text-text-secondary truncate">{preview}</span>
+                      )}
+                    </div>
+                    <svg
+                      className={`w-4 h-4 text-text-secondary shrink-0 ml-2 transition-transform ${isExpanded ? "rotate-180" : ""}`}
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <path d="M6 9l6 6 6-6" />
+                    </svg>
                   </div>
-                )}
-                {entry.noticed && (
-                  <div>
-                    <p className="text-xs text-accent mb-0.5">Noticed</p>
-                    <p className="text-sm text-foreground">{entry.noticed}</p>
-                  </div>
-                )}
-              </div>
-            ))}
+                  {isExpanded && (
+                    <div className="px-4 pb-4 space-y-2 border-t border-surface-light pt-3">
+                      {entry.hardest && (
+                        <div>
+                          <p className="text-xs text-accent mb-0.5">What was hardest</p>
+                          <p className="text-sm text-foreground">{entry.hardest}</p>
+                        </div>
+                      )}
+                      {entry.noticed && (
+                        <div>
+                          <p className="text-xs text-accent mb-0.5">What felt different</p>
+                          <p className="text-sm text-foreground">{entry.noticed}</p>
+                        </div>
+                      )}
+                      {entry.proud && (
+                        <div>
+                          <p className="text-xs text-accent mb-0.5">What I&apos;m proud of</p>
+                          <p className="text-sm text-foreground">{entry.proud}</p>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </button>
+              );
+            })}
           </div>
         </div>
       )}

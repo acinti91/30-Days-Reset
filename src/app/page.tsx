@@ -70,7 +70,7 @@ export default function Home() {
         {activeTab === "plan" && <PlanView currentDay={currentDay} onDaySelect={handleDaySelect} />}
         {activeTab === "chat" && <ChatView autoGreet={autoGreet} />}
         {activeTab === "progress" && (
-          <ProgressView currentDay={currentDay} checkIns={checkIns} />
+          <ProgressView currentDay={currentDay} checkIns={checkIns} startDate={startDate} />
         )}
         {activeTab === "toolkit" && <ToolkitView />}
       </div>
