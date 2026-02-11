@@ -36,6 +36,7 @@ const DEFAULT_CHECKIN: Omit<CheckIn, "id" | "created_at" | "date"> = {
   evening_journal: 0,
   hardest: "",
   noticed: "",
+  proud: "",
 };
 
 function SaveProgress({ completedCount, totalCount }: { completedCount: number; totalCount: number }) {
@@ -125,6 +126,7 @@ export default function TodayView({ currentDay, viewingDay, startDate, allCheckI
         evening_journal: existing.evening_journal,
         hardest: existing.hardest,
         noticed: existing.noticed,
+        proud: existing.proud ?? "",
       });
       if (!isPastDay) setShowMorningReview(false);
     } else {
@@ -206,7 +208,7 @@ export default function TodayView({ currentDay, viewingDay, startDate, allCheckI
   );
 
   const handleReflectionSave = useCallback(
-    (field: "hardest" | "noticed", value: string) => {
+    (field: "hardest" | "noticed" | "proud", value: string) => {
       setLocalCheckIn((prev) => {
         const next = { ...prev, [field]: value };
         onSaveCheckIn(next);
@@ -237,6 +239,7 @@ export default function TodayView({ currentDay, viewingDay, startDate, allCheckI
         evening_journal: habits.evening_journal ?? 0,
         hardest: yesterday?.hardest ?? "",
         noticed: yesterday?.noticed ?? "",
+        proud: yesterday?.proud ?? "",
       });
     },
     [onSaveCheckIn, today, yesterday]
@@ -382,6 +385,7 @@ export default function TodayView({ currentDay, viewingDay, startDate, allCheckI
         <EveningReflection
           hardest={localCheckIn.hardest}
           noticed={localCheckIn.noticed}
+          proud={localCheckIn.proud}
           onSave={handleReflectionSave}
         />
       )}

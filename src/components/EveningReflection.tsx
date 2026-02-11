@@ -5,7 +5,8 @@ import { useState, useRef, useEffect, useCallback } from "react";
 interface Props {
   hardest: string;
   noticed: string;
-  onSave: (field: "hardest" | "noticed", value: string) => void;
+  proud: string;
+  onSave: (field: "hardest" | "noticed" | "proud", value: string) => void;
 }
 
 function AutoTextarea({
@@ -65,7 +66,7 @@ function AutoTextarea({
   );
 }
 
-export default function EveningReflection({ hardest, noticed, onSave }: Props) {
+export default function EveningReflection({ hardest, noticed, proud, onSave }: Props) {
   return (
     <div className="space-y-4">
       <h2 className="text-xs uppercase tracking-widest text-text-secondary">
@@ -80,6 +81,11 @@ export default function EveningReflection({ hardest, noticed, onSave }: Props) {
         label="What felt different from yesterday?"
         value={noticed}
         onSave={(v) => onSave("noticed", v)}
+      />
+      <AutoTextarea
+        label="What are you proud of today?"
+        value={proud}
+        onSave={(v) => onSave("proud", v)}
       />
     </div>
   );

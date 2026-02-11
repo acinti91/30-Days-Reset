@@ -36,6 +36,7 @@ export interface CheckIn {
   evening_journal: number;
   hardest: string;
   noticed: string;
+  proud: string;
   created_at?: string;
 }
 
