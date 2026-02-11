@@ -140,7 +140,10 @@ export default function MorningReview({ currentDay, yesterday, streaks, yesterda
                           <circle cx="12" cy="12" r="9" />
                         </svg>
                       )}
-                      <span className="text-left">{action}</span>
+                      <span className="text-left flex-1">{action}</span>
+                      {done && (
+                        <span className="text-xs text-accent font-medium shrink-0">Done</span>
+                      )}
                     </div>
                   );
                 })}
@@ -183,7 +186,10 @@ export default function MorningReview({ currentDay, yesterday, streaks, yesterda
                         <circle cx="12" cy="12" r="9" />
                       </svg>
                     )}
-                    <span>{label}</span>
+                    <span className="flex-1 text-left">{label}</span>
+                    {mode === "boolean" && done && (
+                      <span className="text-xs text-accent font-medium">Done</span>
+                    )}
                     {mode === "numeric" && isEditing ? (
                       <input
                         ref={inputRef}
