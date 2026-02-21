@@ -415,7 +415,7 @@ export default function TodayView({ currentDay, viewingDay, startDate, allCheckI
         </div>
       )}
 
-      <div className={`px-5 pt-8 pb-28 max-w-lg mx-auto space-y-8${!isPastDay && showMorningReview && currentDay >= 2 && !gapInfo ? " invisible" : ""}`}>
+      <div className={`px-5 pt-8 pb-28 max-w-lg mx-auto space-y-8${!isPastDay && showMorningReview && currentDay >= 2 && !gapInfo ? " hidden" : ""}`}>
       {/* 1. Greeting + Day Header */}
       <div className="space-y-3">
         <p className="text-text-secondary text-sm">
