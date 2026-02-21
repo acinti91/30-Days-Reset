@@ -126,8 +126,8 @@ export default function MorningReview({ currentDay, yesterday, streaks, yesterda
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto pb-12 bg-background/95 animate-fade-in">
-      <div className="pt-12 px-5 max-w-md w-full space-y-8 text-center">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-background/95 animate-fade-in">
+      <div className="min-h-full flex flex-col items-center justify-center px-5 py-12 max-w-md mx-auto space-y-8 text-center">
         <div className="space-y-3">
           <p className="text-text-secondary text-sm">Good morning</p>
           <h1 className="font-serif text-5xl font-light">
