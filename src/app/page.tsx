@@ -10,6 +10,7 @@ import ChatView from "@/components/ChatView";
 import ProgressView from "@/components/ProgressView";
 import ToolkitView from "@/components/ToolkitView";
 import MusicToggle from "@/components/MusicToggle";
+import CatchUpOverlay from "@/components/CatchUpOverlay";
 
 export default function Home() {
   const {
@@ -18,9 +19,16 @@ export default function Home() {
     loading,
     activeTab,
     checkIns,
+    userName,
+    showNewDayPrompt,
+    gapInfo,
+    showCatchUp,
     setStartDate,
+    setUserName,
     saveCheckIn,
     setActiveTab,
+    acknowledgeNewDay,
+    dismissCatchUp,
   } = useApp();
 
   const [autoGreet, setAutoGreet] = useState(false);
@@ -40,6 +48,18 @@ export default function Home() {
     setViewingDay(day);
   }, []);
 
+  const handleOnboardingStart = useCallback(async (date: string, name: string) => {
+    await setStartDate(date);
+    if (name) {
+      await setUserName(name);
+    }
+  }, [setStartDate, setUserName]);
+
+  const handleAcknowledgeNewDay = useCallback(() => {
+    acknowledgeNewDay();
+    setViewingDay(null);
+  }, [acknowledgeNewDay]);
+
   if (loading) {
     return (
       <div className="min-h-dvh flex items-center justify-center">
@@ -49,12 +69,47 @@ export default function Home() {
   }
 
   if (!startDate || !currentDay) {
-    return <Onboarding onStart={setStartDate} />;
+    return <Onboarding onStart={handleOnboardingStart} />;
   }
 
   return (
     <main className="min-h-dvh bg-background">
       <MusicToggle />
+
+      {/* New Day Overlay */}
+      {showNewDayPrompt && (
+        <div className="fixed inset-0 z-50 bg-background flex flex-col items-center justify-center px-6 animate-fade-in">
+          <div className="text-center space-y-6">
+            <h1 className="font-serif text-4xl font-light text-foreground">
+              A new day has begun
+            </h1>
+            <p className="text-text-secondary text-sm">
+              Ready to continue your journey?
+            </p>
+            <button
+              onClick={handleAcknowledgeNewDay}
+              className="bg-accent hover:bg-accent-muted text-background font-medium px-8 py-3 rounded-full transition-colors text-sm tracking-wide active:scale-[0.98]"
+            >
+              Begin new day
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Catch-Up Overlay — shown after multi-day gap */}
+      {showCatchUp && gapInfo && (
+        <CatchUpOverlay
+          missedDays={gapInfo.missedDays}
+          lastActiveDay={gapInfo.lastActiveDay}
+          currentDay={currentDay}
+          onContinue={dismissCatchUp}
+          onReviewMissed={() => {
+            dismissCatchUp();
+            setViewingDay(gapInfo.lastActiveDay + 1);
+          }}
+        />
+      )}
+
       <div className="fade-active">
         {activeTab === "today" && (
           <TodayView
@@ -65,6 +120,8 @@ export default function Home() {
             onSaveCheckIn={saveCheckIn}
             onOpenChat={openChatFromToday}
             onDayChange={handleDayChange}
+            userName={userName}
+            gapInfo={gapInfo}
           />
         )}
         {activeTab === "plan" && <PlanView currentDay={currentDay} onDaySelect={handleDaySelect} />}

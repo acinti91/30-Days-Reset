@@ -11,9 +11,8 @@ interface Props {
   streaks: Record<string, number>;
   yesterdayActions: string[];
   yesterdayActionCompletions: Record<number, number>;
-  todayCoachIntro: string;
   onDismiss: () => void;
-  onSaveYesterday: (habits: Record<string, number>) => void;
+  onSaveYesterday: (data: { habits: Record<string, number>; reflections: { hardest: string; noticed: string; proud: string } }) => void;
 }
 
 const HABIT_LABELS: Record<string, { label: string; mode: "boolean" | "numeric"; unit?: string }> = {
@@ -36,7 +35,7 @@ const STREAK_SHORT_LABELS: Record<string, string> = {
 
 const HABIT_KEYS = Object.keys(HABIT_LABELS);
 
-export default function MorningReview({ currentDay, yesterday, streaks, yesterdayActions, yesterdayActionCompletions, todayCoachIntro, onDismiss, onSaveYesterday }: Props) {
+export default function MorningReview({ currentDay, yesterday, streaks, yesterdayActions, yesterdayActionCompletions, onDismiss, onSaveYesterday }: Props) {
   const activeStreaks = Object.entries(streaks).filter(([, v]) => v > 0);
   const quote = getQuoteForDay(currentDay);
 
@@ -56,6 +55,13 @@ export default function MorningReview({ currentDay, yesterday, streaks, yesterda
     return init;
   });
 
+  // Local state for yesterday's reflections
+  const [reflections, setReflections] = useState({
+    hardest: yesterday?.hardest ?? "",
+    noticed: yesterday?.noticed ?? "",
+    proud: yesterday?.proud ?? "",
+  });
+
   // Sync habits when yesterday prop loads asynchronously
   useEffect(() => {
     if (!yesterday) return;
@@ -67,11 +73,19 @@ export default function MorningReview({ currentDay, yesterday, streaks, yesterda
       }
       return init;
     });
+    setReflections({
+      hardest: yesterday.hardest ?? "",
+      noticed: yesterday.noticed ?? "",
+      proud: yesterday.proud ?? "",
+    });
   }, [yesterday, activeHabitKeys]);
 
   const [editingField, setEditingField] = useState<string | null>(null);
   const [editValue, setEditValue] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Saving state for CTA confirmation
+  const [saving, setSaving] = useState(false);
 
   const toggleBoolean = (key: string) => {
     setHabits((prev) => ({ ...prev, [key]: prev[key] === 1 ? 0 : 1 }));
@@ -90,8 +104,11 @@ export default function MorningReview({ currentDay, yesterday, streaks, yesterda
   };
 
   const handleDismiss = () => {
-    onSaveYesterday(habits);
-    onDismiss();
+    setSaving(true);
+    onSaveYesterday({ habits, reflections });
+    setTimeout(() => {
+      onDismiss();
+    }, 800);
   };
 
   return (
@@ -100,7 +117,7 @@ export default function MorningReview({ currentDay, yesterday, streaks, yesterda
         <div className="space-y-3">
           <p className="text-text-secondary text-sm">Good morning</p>
           <h1 className="font-serif text-5xl font-light">
-            Day <span className="text-accent">{currentDay}</span>
+            Day <span className="text-accent">{currentDay - 1}</span> Review
           </h1>
           <p className="text-text-secondary text-sm italic leading-relaxed">
             &ldquo;{quote.text}&rdquo;
@@ -192,6 +209,45 @@ export default function MorningReview({ currentDay, yesterday, streaks, yesterda
             </div>
           </div>
 
+          {/* Yesterday's reflections — editable */}
+          <div className="space-y-2">
+            <p className="text-text-secondary text-xs uppercase tracking-widest">
+              Yesterday&apos;s reflections
+            </p>
+            <div className="space-y-3 text-left">
+              <div className="space-y-1">
+                <label className="text-text-secondary text-xs">What was hardest</label>
+                <textarea
+                  value={reflections.hardest}
+                  onChange={(e) => setReflections((prev) => ({ ...prev, hardest: e.target.value }))}
+                  placeholder="What was the hardest part of yesterday?"
+                  rows={2}
+                  className="w-full bg-surface-light rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-text-secondary/40 focus:outline-none focus:ring-1 focus:ring-accent resize-none"
+                />
+              </div>
+              <div className="space-y-1">
+                <label className="text-text-secondary text-xs">What felt different</label>
+                <textarea
+                  value={reflections.noticed}
+                  onChange={(e) => setReflections((prev) => ({ ...prev, noticed: e.target.value }))}
+                  placeholder="What did you notice or what felt different?"
+                  rows={2}
+                  className="w-full bg-surface-light rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-text-secondary/40 focus:outline-none focus:ring-1 focus:ring-accent resize-none"
+                />
+              </div>
+              <div className="space-y-1">
+                <label className="text-text-secondary text-xs">What I&apos;m proud of</label>
+                <textarea
+                  value={reflections.proud}
+                  onChange={(e) => setReflections((prev) => ({ ...prev, proud: e.target.value }))}
+                  placeholder="What are you proud of from yesterday?"
+                  rows={2}
+                  className="w-full bg-surface-light rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-text-secondary/40 focus:outline-none focus:ring-1 focus:ring-accent resize-none"
+                />
+              </div>
+            </div>
+          </div>
+
           {/* Streaks */}
           {activeStreaks.length > 0 && (
             <div className="space-y-2">
@@ -216,22 +272,21 @@ export default function MorningReview({ currentDay, yesterday, streaks, yesterda
           )}
         </div>
 
-        {todayCoachIntro && (
-          <div className="space-y-2 text-left">
-            <p className="text-text-secondary text-xs uppercase tracking-widest text-center">
-              What today is about
-            </p>
-            <p className="text-foreground text-sm leading-relaxed italic">
-              {todayCoachIntro}
-            </p>
-          </div>
-        )}
-
         <button
           onClick={handleDismiss}
-          className="bg-accent hover:bg-accent-muted text-background font-medium py-3 px-8 rounded-full transition-colors text-sm"
+          disabled={saving}
+          className="bg-accent hover:bg-accent-muted text-background font-medium py-3 px-8 rounded-full transition-colors text-sm disabled:opacity-70"
         >
-          Begin Day {currentDay}
+          {saving ? (
+            <span className="inline-flex items-center gap-2">
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                <path d="M5 13l4 4L19 7" />
+              </svg>
+              Saved!
+            </span>
+          ) : (
+            <>Save &amp; Begin Day {currentDay}</>
+          )}
         </button>
       </div>
     </div>

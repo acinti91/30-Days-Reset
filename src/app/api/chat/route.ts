@@ -1,5 +1,5 @@
 import Anthropic from "@anthropic-ai/sdk";
-import { getSetting, getAllCheckIns, getChatMessages, saveChatMessage } from "@/lib/db";
+import { getSetting, getAllCheckIns, getAllActionResponses, getChatMessages, saveChatMessage } from "@/lib/db";
 import { getCoachSystemPrompt } from "@/lib/coach-prompt";
 import { getWeekForDay } from "@/lib/plan-data";
 
@@ -22,12 +22,16 @@ export async function POST(request: Request) {
   }
 
   const week = getWeekForDay(currentDay);
-  const allCheckIns = await getAllCheckIns();
+  const [allCheckIns, actionResponses] = await Promise.all([
+    getAllCheckIns(),
+    getAllActionResponses(),
+  ]);
 
   const systemPrompt = getCoachSystemPrompt(
     currentDay,
     week?.theme || "Awareness & Separation",
-    allCheckIns as unknown as Record<string, unknown>[]
+    allCheckIns as unknown as Record<string, unknown>[],
+    actionResponses
   );
 
   // Get recent chat history for context

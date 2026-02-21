@@ -91,6 +91,7 @@ export interface ActionCompletion {
   day_number: number;
   action_index: number;
   completed: number;
+  response_text?: string | null;
   created_at?: string;
 }
 
@@ -110,12 +111,43 @@ export async function saveActionCompletion(
   date: string,
   dayNumber: number,
   actionIndex: number,
-  completed: number
+  completed: number,
+  responseText?: string | null
 ): Promise<void> {
+  const row: Record<string, unknown> = {
+    date,
+    day_number: dayNumber,
+    action_index: actionIndex,
+    completed,
+  };
+  if (responseText !== undefined) {
+    row.response_text = responseText;
+  }
   await getSupabase()
     .from("action_completions")
-    .upsert(
-      { date, day_number: dayNumber, action_index: actionIndex, completed },
-      { onConflict: "date,day_number,action_index" }
-    );
+    .upsert(row, { onConflict: "date,day_number,action_index" });
+}
+
+export async function getActionResponse(
+  dayNumber: number,
+  actionIndex: number
+): Promise<string | null> {
+  const { data } = await getSupabase()
+    .from("action_completions")
+    .select("response_text")
+    .eq("day_number", dayNumber)
+    .eq("action_index", actionIndex)
+    .single();
+  return data?.response_text ?? null;
+}
+
+export async function getAllActionResponses(): Promise<
+  { day_number: number; action_index: number; response_text: string; date: string }[]
+> {
+  const { data } = await getSupabase()
+    .from("action_completions")
+    .select("day_number, action_index, response_text, date")
+    .not("response_text", "is", null)
+    .order("date", { ascending: true });
+  return (data ?? []) as { day_number: number; action_index: number; response_text: string; date: string }[];
 }

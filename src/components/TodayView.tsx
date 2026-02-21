@@ -2,10 +2,12 @@
 
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { getDayData, HABIT_INTRO_DAY } from "@/lib/plan-data";
+import type { DayInput } from "@/lib/plan-data";
 import type { CheckIn } from "@/lib/db";
 import { getAllStreaks } from "@/lib/streaks";
 import MorningReview from "./MorningReview";
 import HabitCard from "./HabitCard";
+import ActionInput from "./ActionInput";
 import EveningReflection from "./EveningReflection";
 
 interface Props {
@@ -16,6 +18,15 @@ interface Props {
   onSaveCheckIn: (data: Omit<CheckIn, "id" | "created_at">) => void;
   onOpenChat: () => void;
   onDayChange: (day: number | null) => void;
+  userName?: string | null;
+  gapInfo?: { missedDays: number; lastActiveDay: number } | null;
+}
+
+function getGreeting(): string {
+  const hour = new Date().getHours();
+  if (hour < 12) return "Good morning";
+  if (hour < 17) return "Good afternoon";
+  return "Good evening";
 }
 
 const HABITS = [
@@ -39,38 +50,78 @@ const DEFAULT_CHECKIN: Omit<CheckIn, "id" | "created_at" | "date"> = {
   proud: "",
 };
 
-function SaveProgress({ completedCount, totalCount }: { completedCount: number; totalCount: number }) {
-  const [saved, setSaved] = useState(false);
+function CloseYourDay({
+  completedCount,
+  totalCount,
+  displayDay,
+  displayDate,
+  onSave,
+}: {
+  completedCount: number;
+  totalCount: number;
+  displayDay: number;
+  displayDate: string;
+  onSave: () => void;
+}) {
+  const storageKey = `day-closed-${displayDate}`;
+  const [phase, setPhase] = useState<"idle" | "summary" | "closed">(() => {
+    if (typeof window === "undefined") return "idle";
+    return sessionStorage.getItem(storageKey) ? "closed" : "idle";
+  });
 
+  // Reset phase when day changes
   useEffect(() => {
-    if (saved) {
-      const t = setTimeout(() => setSaved(false), 2000);
-      return () => clearTimeout(t);
-    }
-  }, [saved]);
+    if (typeof window === "undefined") return;
+    setPhase(sessionStorage.getItem(storageKey) ? "closed" : "idle");
+  }, [storageKey]);
 
-  if (completedCount === 0) return null;
+  const handleClose = useCallback(() => {
+    onSave();
+    setPhase("summary");
+    sessionStorage.setItem(storageKey, "1");
+    setTimeout(() => setPhase("closed"), 2500);
+  }, [onSave, storageKey]);
+
+  if (completedCount === 0 && phase === "idle") return null;
+
+  if (phase === "summary") {
+    return (
+      <div className="animate-fade-up-in text-center space-y-2 py-4">
+        <div className="flex items-center justify-center gap-2">
+          <svg className="w-5 h-5 text-accent animate-check-draw" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+            <path d="M5 13l4 4L19 7" />
+          </svg>
+          <span className="text-foreground font-medium">Day {displayDay} complete</span>
+        </div>
+        <p className="text-text-secondary text-sm">{completedCount} of {totalCount} completed</p>
+      </div>
+    );
+  }
+
+  if (phase === "closed") {
+    return (
+      <div className="text-center py-3">
+        <span className="text-text-secondary text-sm flex items-center justify-center gap-1.5">
+          <svg className="w-3.5 h-3.5 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+            <path d="M5 13l4 4L19 7" />
+          </svg>
+          Day closed
+        </span>
+      </div>
+    );
+  }
 
   return (
     <button
-      onClick={() => setSaved(true)}
+      onClick={handleClose}
       className="w-full flex items-center justify-center gap-2 py-3 rounded-full bg-accent hover:bg-accent-muted text-background text-sm font-medium transition-all active:scale-[0.98]"
     >
-      {saved ? (
-        <>
-          <svg className="w-4 h-4 text-background" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-            <path d="M5 13l4 4L19 7" />
-          </svg>
-          <span className="text-background font-medium">Progress saved!</span>
-        </>
-      ) : (
-        <span className="text-background">Save progress</span>
-      )}
+      Close your day
     </button>
   );
 }
 
-export default function TodayView({ currentDay, viewingDay, startDate, allCheckIns, onSaveCheckIn, onOpenChat, onDayChange }: Props) {
+export default function TodayView({ currentDay, viewingDay, startDate, allCheckIns, onSaveCheckIn, onOpenChat, onDayChange, userName, gapInfo }: Props) {
   const displayDay = viewingDay ?? currentDay;
   const isPastDay = displayDay < currentDay;
 
@@ -92,6 +143,12 @@ export default function TodayView({ currentDay, viewingDay, startDate, allCheckI
   // Action completions state
   const [actionCompletions, setActionCompletions] = useState<Record<number, number>>({});
 
+  // Action responses state (for day-specific text inputs)
+  const [actionResponses, setActionResponses] = useState<Record<number, string>>({});
+
+  // Day 5 screen time baseline for Day 14 comparison
+  const [day5ScreenTime, setDay5ScreenTime] = useState<string | null>(null);
+
   // Local check-in state — the single source of truth for the displayed day
   const [localCheckIn, setLocalCheckIn] = useState<Omit<CheckIn, "id" | "created_at">>({
     date: displayDate,
@@ -101,16 +158,29 @@ export default function TodayView({ currentDay, viewingDay, startDate, allCheckI
   // Edit mode for past days
   const [editing, setEditing] = useState(false);
 
-  // Reset editing when switching days
+  // Whether this past day has an existing check-in
+  const hasExistingCheckIn = useMemo(
+    () => allCheckIns.some((c) => c.date === displayDate),
+    [allCheckIns, displayDate]
+  );
+
+  // Reset editing when switching days; auto-enable for empty past days
   useEffect(() => {
-    setEditing(false);
-  }, [displayDay]);
+    if (isPastDay && !allCheckIns.some((c) => c.date === displayDate)) {
+      setEditing(true);
+    } else {
+      setEditing(false);
+    }
+  }, [displayDay, isPastDay, allCheckIns, displayDate]);
 
   // Morning review visibility (only for current day)
   const [showMorningReview, setShowMorningReview] = useState(() => {
     if (typeof window === "undefined") return false;
     return !sessionStorage.getItem(`morning-review-dismissed-${today}`);
   });
+
+  // Day N begins interstitial
+  const [showDayBegins, setShowDayBegins] = useState(false);
 
   // Initialize local state from existing check-in data
   useEffect(() => {
@@ -139,13 +209,27 @@ export default function TodayView({ currentDay, viewingDay, startDate, allCheckI
   useEffect(() => {
     fetch(`/api/actions?date=${displayDate}&day=${displayDay}`)
       .then((r) => r.json())
-      .then((rows: { action_index: number; completed: number }[]) => {
-        const map: Record<number, number> = {};
-        rows.forEach((r) => (map[r.action_index] = r.completed));
-        setActionCompletions(map);
+      .then((rows: { action_index: number; completed: number; response_text?: string | null }[]) => {
+        const compMap: Record<number, number> = {};
+        const respMap: Record<number, string> = {};
+        rows.forEach((r) => {
+          compMap[r.action_index] = r.completed;
+          if (r.response_text) respMap[r.action_index] = r.response_text;
+        });
+        setActionCompletions(compMap);
+        setActionResponses(respMap);
       })
       .catch(() => {});
   }, [displayDate, displayDay]);
+
+  // Fetch Day 5 screen time baseline when viewing Day 14
+  useEffect(() => {
+    if (displayDay !== 14) { setDay5ScreenTime(null); return; }
+    fetch("/api/actions/response?day=5&action=0")
+      .then((r) => r.json())
+      .then((data: { response: string | null }) => setDay5ScreenTime(data.response))
+      .catch(() => {});
+  }, [displayDay]);
 
   // Yesterday's action completions (only needed for current day's morning review)
   const [yesterdayActionCompletions, setYesterdayActionCompletions] = useState<Record<number, number>>({});
@@ -204,7 +288,25 @@ export default function TodayView({ currentDay, viewingDay, startDate, allCheckI
         body: JSON.stringify({ date: displayDate, dayNumber: displayDay, actionIndex, completed: value }),
       }).catch(() => {});
     },
-    [displayDate, displayDay, isPastDay]
+    [displayDate, displayDay, isPastDay, editing]
+  );
+
+  const handleActionResponse = useCallback(
+    (actionIndex: number, value: string) => {
+      setActionResponses((prev) => ({ ...prev, [actionIndex]: value }));
+      fetch("/api/actions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          date: displayDate,
+          dayNumber: displayDay,
+          actionIndex,
+          completed: actionCompletions[actionIndex] ?? 1,
+          responseText: value,
+        }),
+      }).catch(() => {});
+    },
+    [displayDate, displayDay, actionCompletions]
   );
 
   const handleReflectionSave = useCallback(
@@ -221,29 +323,36 @@ export default function TodayView({ currentDay, viewingDay, startDate, allCheckI
   const dismissMorningReview = useCallback(() => {
     sessionStorage.setItem(`morning-review-dismissed-${today}`, "1");
     setShowMorningReview(false);
+    setShowDayBegins(true);
+    setTimeout(() => setShowDayBegins(false), 1500);
   }, [today]);
 
-  // Save yesterday's habits from morning review
+  // Save yesterday's habits and reflections from morning review
   const handleSaveYesterday = useCallback(
-    (habits: Record<string, number>) => {
+    (data: { habits: Record<string, number>; reflections: { hardest: string; noticed: string; proud: string } }) => {
       const d = new Date(today + "T12:00:00");
       d.setDate(d.getDate() - 1);
       const yDate = d.toISOString().split("T")[0];
       onSaveCheckIn({
         date: yDate,
-        phone_out_bedroom: habits.phone_out_bedroom ?? 0,
-        morning_phone_free: habits.morning_phone_free ?? 0,
-        boredom_minutes: habits.boredom_minutes ?? 0,
-        meditation_minutes: habits.meditation_minutes ?? 0,
-        phone_free_walk: habits.phone_free_walk ?? 0,
-        evening_journal: habits.evening_journal ?? 0,
-        hardest: yesterday?.hardest ?? "",
-        noticed: yesterday?.noticed ?? "",
-        proud: yesterday?.proud ?? "",
+        phone_out_bedroom: data.habits.phone_out_bedroom ?? 0,
+        morning_phone_free: data.habits.morning_phone_free ?? 0,
+        boredom_minutes: data.habits.boredom_minutes ?? 0,
+        meditation_minutes: data.habits.meditation_minutes ?? 0,
+        phone_free_walk: data.habits.phone_free_walk ?? 0,
+        evening_journal: data.habits.evening_journal ?? 0,
+        hardest: data.reflections.hardest,
+        noticed: data.reflections.noticed,
+        proud: data.reflections.proud,
       });
     },
-    [onSaveCheckIn, today, yesterday]
+    [onSaveCheckIn, today]
   );
+
+  // Save current check-in (for CloseYourDay)
+  const handleSaveCurrentCheckIn = useCallback(() => {
+    onSaveCheckIn(localCheckIn);
+  }, [onSaveCheckIn, localCheckIn]);
 
   if (!dayData) return null;
 
@@ -262,23 +371,35 @@ export default function TodayView({ currentDay, viewingDay, startDate, allCheckI
 
   return (
     <>
-      {/* Morning Review Overlay — outside scrollable container, only from Day 2+ on current day */}
-      {!isPastDay && showMorningReview && currentDay >= 2 && (
+      {/* Morning Review Overlay — outside scrollable container, only from Day 2+ on current day, skip during gap recovery */}
+      {!isPastDay && showMorningReview && currentDay >= 2 && !gapInfo && (
         <MorningReview
           currentDay={currentDay}
           yesterday={yesterday}
           streaks={streaks}
           yesterdayActions={yesterdayDayData?.day.actions ?? []}
           yesterdayActionCompletions={yesterdayActionCompletions}
-          todayCoachIntro={dayData?.day.coachIntro ?? ""}
           onDismiss={dismissMorningReview}
           onSaveYesterday={handleSaveYesterday}
         />
       )}
 
+      {/* Day N Begins Interstitial */}
+      {showDayBegins && (
+        <div className="fixed inset-0 z-40 bg-background flex flex-col items-center justify-center animate-day-begins">
+          <h1 className="font-serif text-5xl font-light text-foreground">
+            Day <span className="text-accent">{currentDay}</span>
+          </h1>
+          <p className="text-text-secondary text-lg mt-2">begins</p>
+        </div>
+      )}
+
       <div className="px-5 pt-8 pb-28 max-w-lg mx-auto space-y-8">
-      {/* Day Header */}
+      {/* 1. Greeting + Day Header */}
       <div className="space-y-3">
+        <p className="text-text-secondary text-sm">
+          {getGreeting()}{userName ? `, ${userName}` : ""}
+        </p>
         <div className="flex items-baseline justify-between">
           <h1 className="font-serif text-4xl font-light">
             Day <span className="text-accent">{displayDay}</span>
@@ -300,31 +421,28 @@ export default function TodayView({ currentDay, viewingDay, startDate, allCheckI
         </p>
       </div>
 
-      {/* Focus */}
-      <div className="space-y-3">
-        <h2 className="text-xs uppercase tracking-widest text-text-secondary">
-          Today&apos;s Focus
-        </h2>
-        {day.focus.map((f, i) => (
-          <div key={i} className="flex gap-3 items-start">
-            <div className="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 shrink-0" />
-            <p className="text-foreground text-sm leading-relaxed">{f}</p>
-          </div>
-        ))}
-      </div>
-
-      {/* Coach Intro */}
+      {/* 2. Narrative section (focus callout + coach intro) */}
       {day.coachIntro && (
         <div className="space-y-3">
           <h2 className="text-xs uppercase tracking-widest text-text-secondary">
             Why This Matters Today
           </h2>
-          <div className="text-text-secondary text-sm leading-relaxed italic space-y-3">
+          {/* Focus callout box */}
+          <div className="bg-surface/50 rounded-lg px-4 py-3 space-y-1">
+            {day.focus.map((f, i) => (
+              <div key={i} className="flex gap-2 items-start">
+                <div className="w-1 h-1 rounded-full bg-accent mt-2 shrink-0" />
+                <p className="text-foreground text-sm">{f}</p>
+              </div>
+            ))}
+          </div>
+          {/* Coach intro paragraphs */}
+          <div className="text-foreground/70 text-sm leading-relaxed space-y-3">
             {day.coachIntro.split("\n\n").map((paragraph, i) => (
               <p key={i}>
                 {paragraph.split(/(\*\*[^*]+\*\*)/).map((part, j) =>
                   part.startsWith("**") && part.endsWith("**") ? (
-                    <strong key={j} className="text-foreground font-medium not-italic">{part.slice(2, -2)}</strong>
+                    <strong key={j} className="text-foreground font-medium">{part.slice(2, -2)}</strong>
                   ) : (
                     <span key={j}>{part}</span>
                   )
@@ -335,7 +453,28 @@ export default function TodayView({ currentDay, viewingDay, startDate, allCheckI
         </div>
       )}
 
-      {/* Actions */}
+      {/* Focus fallback when no coach intro */}
+      {!day.coachIntro && day.focus.length > 0 && (
+        <div className="bg-surface/50 rounded-lg px-4 py-3 space-y-1">
+          {day.focus.map((f, i) => (
+            <div key={i} className="flex gap-2 items-start">
+              <div className="w-1 h-1 rounded-full bg-accent mt-2 shrink-0" />
+              <p className="text-foreground text-sm">{f}</p>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Nudge banner for empty past days */}
+      {isPastDay && editing && !hasExistingCheckIn && (
+        <div className="bg-surface/50 rounded-lg px-4 py-3">
+          <p className="text-text-secondary text-sm">
+            You missed this day, and that&apos;s okay. You can still fill it in if you like.
+          </p>
+        </div>
+      )}
+
+      {/* 3. Actions */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <h2 className="text-xs uppercase tracking-widest text-text-secondary">
@@ -346,20 +485,34 @@ export default function TodayView({ currentDay, viewingDay, startDate, allCheckI
           </span>
         </div>
         <div className="space-y-2">
-          {day.actions.map((action, i) => (
-            <HabitCard
-              key={i}
-              field={String(i)}
-              label={action}
-              mode="boolean"
-              value={actionCompletions[i] ?? 0}
-              onChange={handleActionToggle}
-            />
-          ))}
+          {day.actions.map((action, i) => {
+            const input = day.inputs?.find((inp: DayInput) => inp.actionIndex === i);
+            const showInput = input && (actionCompletions[i] > 0 || actionResponses[i]);
+            return (
+              <div key={i}>
+                <HabitCard
+                  field={String(i)}
+                  label={action}
+                  mode="boolean"
+                  value={actionCompletions[i] ?? 0}
+                  onChange={handleActionToggle}
+                />
+                {showInput && (
+                  <ActionInput
+                    input={input}
+                    value={actionResponses[i] ?? ""}
+                    onChange={(val) => handleActionResponse(i, val)}
+                    disabled={isPastDay && !editing}
+                    comparisonValue={displayDay === 14 && i === 2 ? day5ScreenTime : undefined}
+                  />
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
 
-      {/* Habits Section */}
+      {/* 4. Daily Habits */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <h2 className="text-xs uppercase tracking-widest text-text-secondary">
@@ -390,8 +543,8 @@ export default function TodayView({ currentDay, viewingDay, startDate, allCheckI
         </div>
       </div>
 
-      {/* Evening Reflection — current day only */}
-      {!isPastDay && (
+      {/* 5. Evening Reflection — current day or past day in edit mode */}
+      {(!isPastDay || editing) && (
         <EveningReflection
           hardest={localCheckIn.hardest}
           noticed={localCheckIn.noticed}
@@ -400,10 +553,18 @@ export default function TodayView({ currentDay, viewingDay, startDate, allCheckI
         />
       )}
 
-      {/* Save Progress — current day only */}
-      {!isPastDay && <SaveProgress completedCount={completedCount} totalCount={totalCount} />}
+      {/* 6. Close Your Day — current day only */}
+      {!isPastDay && (
+        <CloseYourDay
+          completedCount={completedCount}
+          totalCount={totalCount}
+          displayDay={displayDay}
+          displayDate={displayDate}
+          onSave={handleSaveCurrentCheckIn}
+        />
+      )}
 
-      {/* Talk to Coach — current day only */}
+      {/* 7. Talk to Coach — current day only */}
       {!isPastDay && (
         <button
           onClick={onOpenChat}
@@ -413,7 +574,7 @@ export default function TodayView({ currentDay, viewingDay, startDate, allCheckI
         </button>
       )}
 
-      {/* Edit past day */}
+      {/* 8. Edit/Done (past days) */}
       {isPastDay && !editing && (
         <button
           onClick={() => setEditing(true)}
@@ -435,7 +596,7 @@ export default function TodayView({ currentDay, viewingDay, startDate, allCheckI
         </button>
       )}
 
-      {/* Prev / Next day navigation */}
+      {/* 9. Day Navigation */}
       <div className="flex justify-between items-center pt-2">
         {displayDay > 1 ? (
           <button

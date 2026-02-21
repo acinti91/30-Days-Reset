@@ -12,10 +12,12 @@ interface Props {
 function AutoTextarea({
   label,
   value,
+  placeholder,
   onSave,
 }: {
   label: string;
   value: string;
+  placeholder?: string;
   onSave: (value: string) => void;
 }) {
   const [text, setText] = useState(value);
@@ -50,7 +52,12 @@ function AutoTextarea({
       <div className="flex items-center justify-between">
         <label className="text-xs text-text-secondary">{label}</label>
         {saved && (
-          <span className="text-xs text-accent animate-fade-in">Saved</span>
+          <span className="text-xs text-accent animate-fade-in flex items-center gap-1">
+            <svg className="w-3 h-3 animate-check-draw" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+              <path d="M5 13l4 4L19 7" />
+            </svg>
+            Saved
+          </span>
         )}
       </div>
       <textarea
@@ -60,7 +67,7 @@ function AutoTextarea({
         onBlur={handleBlur}
         rows={2}
         className="w-full bg-surface rounded-xl px-4 py-3 text-sm text-foreground border border-surface-light focus:outline-none focus:ring-1 focus:ring-accent resize-none leading-relaxed"
-        placeholder="..."
+        placeholder={placeholder ?? "..."}
       />
     </div>
   );
@@ -75,16 +82,19 @@ export default function EveningReflection({ hardest, noticed, proud, onSave }: P
       <AutoTextarea
         label="What was hardest today?"
         value={hardest}
+        placeholder="The hardest moment was when..."
         onSave={(v) => onSave("hardest", v)}
       />
       <AutoTextarea
         label="What felt different from yesterday?"
         value={noticed}
+        placeholder="Today I noticed..."
         onSave={(v) => onSave("noticed", v)}
       />
       <AutoTextarea
         label="What are you proud of today?"
         value={proud}
+        placeholder="I'm proud that I..."
         onSave={(v) => onSave("proud", v)}
       />
     </div>

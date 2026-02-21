@@ -5,12 +5,13 @@ import { useState } from "react";
 export default function Onboarding({
   onStart,
 }: {
-  onStart: (date: string) => void;
+  onStart: (date: string, name: string) => void;
 }) {
   const [date, setDate] = useState(() => {
     const now = new Date();
     return now.toISOString().split("T")[0];
   });
+  const [name, setName] = useState("");
 
   return (
     <div className="min-h-dvh flex flex-col items-center justify-center px-6">
@@ -32,6 +33,23 @@ export default function Onboarding({
         <div className="space-y-6">
           <div className="space-y-2">
             <label
+              htmlFor="user-name"
+              className="text-text-secondary text-xs uppercase tracking-widest"
+            >
+              What should we call you?
+            </label>
+            <input
+              id="user-name"
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Optional"
+              className="block w-full max-w-[240px] mx-auto bg-surface-light border border-surface-light rounded-lg px-4 py-3 text-center text-foreground placeholder:text-text-secondary/50 focus:outline-none focus:border-accent transition-colors"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label
               htmlFor="start-date"
               className="text-text-secondary text-xs uppercase tracking-widest"
             >
@@ -47,7 +65,7 @@ export default function Onboarding({
           </div>
 
           <button
-            onClick={() => onStart(date)}
+            onClick={() => onStart(date, name.trim())}
             className="bg-accent hover:bg-accent-muted text-background font-medium px-10 py-3 rounded-full transition-colors text-sm tracking-wide active:scale-[0.98]"
           >
             Begin

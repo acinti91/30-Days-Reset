@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: Request) {
-  const { date, dayNumber, actionIndex, completed } = await request.json();
-  await saveActionCompletion(date, dayNumber, actionIndex, completed);
+  const { date, dayNumber, actionIndex, completed, responseText } = await request.json();
+  await saveActionCompletion(date, dayNumber, actionIndex, completed, responseText);
   return NextResponse.json({ success: true });
 }

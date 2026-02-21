@@ -2,9 +2,12 @@ import { NextResponse } from "next/server";
 import { getSetting, setSetting } from "@/lib/db";
 
 export async function GET() {
-  const startDate = await getSetting("start_date");
+  const [startDate, userName] = await Promise.all([
+    getSetting("start_date"),
+    getSetting("user_name"),
+  ]);
   if (!startDate) {
-    return NextResponse.json({ startDate: null, currentDay: null });
+    return NextResponse.json({ startDate: null, currentDay: null, userName: userName ?? null });
   }
   const start = new Date(startDate);
   const now = new Date();
@@ -13,11 +16,17 @@ export async function GET() {
   return NextResponse.json({
     startDate,
     currentDay: Math.min(Math.max(currentDay, 1), 30),
+    userName: userName ?? null,
   });
 }
 
 export async function POST(request: Request) {
-  const { startDate } = await request.json();
-  await setSetting("start_date", startDate);
+  const { startDate, userName } = await request.json();
+  if (startDate !== undefined) {
+    await setSetting("start_date", startDate);
+  }
+  if (userName !== undefined) {
+    await setSetting("user_name", userName);
+  }
   return NextResponse.json({ success: true });
 }

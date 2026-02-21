@@ -142,3 +142,35 @@ body::before {
   border-top: 1px solid var(--surface-light);
   margin: 1em 0;
 }
+
+/* Save pulse */
+@keyframes save-pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+.animate-save-pulse { animation: save-pulse 0.3s ease-in-out; }
+
+/* Checkmark draw */
+@keyframes check-draw {
+  from { stroke-dashoffset: 24; }
+  to { stroke-dashoffset: 0; }
+}
+.animate-check-draw path {
+  stroke-dasharray: 24;
+  animation: check-draw 0.3s ease-out forwards;
+}
+
+/* Fade up in */
+@keyframes fade-up-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-up-in { animation: fade-up-in 0.4s ease-out; }
+
+/* Day begins transition */
+@keyframes day-begins {
+  0% { opacity: 0; transform: scale(0.95); }
+  100% { opacity: 1; transform: scale(1); }
+}
+.animate-day-begins { animation: day-begins 0.6s ease-out; }
