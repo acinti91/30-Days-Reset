@@ -142,16 +142,22 @@ export default function MorningReview({ currentDay, yesterday, streaks, yesterda
                   return (
                     <div
                       key={i}
-                      className={`w-full flex items-center gap-2 text-sm py-2.5 px-3 rounded-lg ${
+                      className={`w-full flex items-center gap-3 text-sm py-2.5 px-3 rounded-lg ${
                         done
                           ? "text-foreground bg-accent/5"
                           : "text-text-secondary/60"
                       }`}
                     >
+                      <div className={`w-5 h-5 rounded-full border-2 shrink-0 flex items-center justify-center ${
+                        done ? "border-accent bg-accent" : "border-surface-light"
+                      }`}>
+                        {done && (
+                          <svg className="w-3 h-3 text-background" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                            <path d="M5 13l4 4L19 7" />
+                          </svg>
+                        )}
+                      </div>
                       <span className="text-left flex-1">{action}</span>
-                      {done && (
-                        <span className="text-xs text-accent font-medium shrink-0">Done</span>
-                      )}
                     </div>
                   );
                 })}
@@ -164,9 +170,10 @@ export default function MorningReview({ currentDay, yesterday, streaks, yesterda
             <p className="text-text-secondary text-xs uppercase tracking-widest">
               Yesterday&apos;s habits
             </p>
+            <p className="text-text-secondary/60 text-xs">Tap to toggle</p>
             <div className="space-y-1.5">
               {activeHabitKeys.map((key) => {
-                const { label, mode, unit } = HABIT_LABELS[key];
+                const { label, mode } = HABIT_LABELS[key];
                 const val = habits[key];
                 const done = val > 0;
                 const isEditing = editingField === key;
@@ -179,12 +186,21 @@ export default function MorningReview({ currentDay, yesterday, streaks, yesterda
                       if (mode === "boolean") toggleBoolean(key);
                       else if (!isEditing) startNumericEdit(key);
                     }}
-                    className={`w-full flex items-center gap-2 justify-center text-sm py-2.5 px-3 rounded-lg transition-colors ${
+                    className={`w-full flex items-center gap-3 text-sm py-2.5 px-3 rounded-lg transition-colors ${
                       done
                         ? "text-foreground bg-accent/5"
                         : "text-text-secondary/60 hover:bg-surface-light"
                     }`}
                   >
+                    <div className={`w-5 h-5 rounded-full border-2 shrink-0 flex items-center justify-center transition-colors ${
+                      done ? "border-accent bg-accent" : "border-surface-light"
+                    }`}>
+                      {done && (
+                        <svg className="w-3 h-3 text-background" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                          <path d="M5 13l4 4L19 7" />
+                        </svg>
+                      )}
+                    </div>
                     <span className="flex-1 text-left">{label}</span>
                     {mode === "numeric" && isEditing ? (
                       <input
@@ -199,8 +215,8 @@ export default function MorningReview({ currentDay, yesterday, streaks, yesterda
                         className="w-20 bg-surface-light rounded-lg px-2 py-1 text-sm text-foreground text-center focus:outline-none focus:ring-1 focus:ring-accent"
                       />
                     ) : (
-                      done && (
-                        <span className="text-xs text-accent font-medium">Done</span>
+                      mode === "numeric" && done && (
+                        <span className="text-xs text-accent font-medium">{val}m</span>
                       )
                     )}
                   </button>
