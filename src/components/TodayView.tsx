@@ -463,6 +463,7 @@ export default function TodayView({ currentDay, viewingDay, startDate, allCheckI
             ))}
           </div>
           {/* Focus points as subtle callout */}
+          <p className="text-text-secondary/60 text-xs italic">In essence:</p>
           <div className="bg-surface/50 rounded-lg px-4 py-3 space-y-1">
             {day.focus.map((f, i) => (
               <div key={i} className="flex gap-2 items-start">
