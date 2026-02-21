@@ -74,9 +74,11 @@ export default function MorningReview({ currentDay, yesterday, streaks, yesterda
     setActions({ ...yesterdayActionCompletions });
   }, [yesterdayActionCompletions]);
 
-  // Sync habits when yesterday prop loads asynchronously
+  // Sync habits when yesterday prop loads asynchronously (only on actual change)
+  const syncedYesterdayRef = useRef(yesterday);
   useEffect(() => {
-    if (!yesterday) return;
+    if (!yesterday || yesterday === syncedYesterdayRef.current) return;
+    syncedYesterdayRef.current = yesterday;
     setHabits(() => {
       const init: Record<string, number> = {};
       for (const key of activeHabitKeys) {
@@ -90,7 +92,7 @@ export default function MorningReview({ currentDay, yesterday, streaks, yesterda
       noticed: yesterday.noticed ?? "",
       proud: yesterday.proud ?? "",
     });
-  }, [yesterday, activeHabitKeys]);
+  }, [yesterday]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const [editingField, setEditingField] = useState<string | null>(null);
   const [editValue, setEditValue] = useState("");
