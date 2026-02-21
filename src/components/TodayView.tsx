@@ -327,12 +327,13 @@ export default function TodayView({ currentDay, viewingDay, startDate, allCheckI
     setTimeout(() => setShowDayBegins(false), 1500);
   }, [today]);
 
-  // Save yesterday's habits and reflections from morning review
+  // Save yesterday's habits, reflections, and actions from morning review
   const handleSaveYesterday = useCallback(
-    (data: { habits: Record<string, number>; reflections: { hardest: string; noticed: string; proud: string } }) => {
+    (data: { habits: Record<string, number>; reflections: { hardest: string; noticed: string; proud: string }; actions: Record<number, number> }) => {
       const d = new Date(today + "T12:00:00");
       d.setDate(d.getDate() - 1);
       const yDate = d.toISOString().split("T")[0];
+      const yDay = currentDay - 1;
       onSaveCheckIn({
         date: yDate,
         phone_out_bedroom: data.habits.phone_out_bedroom ?? 0,
@@ -345,8 +346,16 @@ export default function TodayView({ currentDay, viewingDay, startDate, allCheckI
         noticed: data.reflections.noticed,
         proud: data.reflections.proud,
       });
+      // Save action completions for yesterday
+      for (const [indexStr, completed] of Object.entries(data.actions)) {
+        fetch("/api/actions", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ date: yDate, dayNumber: yDay, actionIndex: Number(indexStr), completed }),
+        }).catch(() => {});
+      }
     },
-    [onSaveCheckIn, today]
+    [onSaveCheckIn, today, currentDay]
   );
 
   // Save current check-in (for CloseYourDay)

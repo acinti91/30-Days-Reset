@@ -12,7 +12,7 @@ interface Props {
   yesterdayActions: string[];
   yesterdayActionCompletions: Record<number, number>;
   onDismiss: () => void;
-  onSaveYesterday: (data: { habits: Record<string, number>; reflections: { hardest: string; noticed: string; proud: string } }) => void;
+  onSaveYesterday: (data: { habits: Record<string, number>; reflections: { hardest: string; noticed: string; proud: string }; actions: Record<number, number> }) => void;
 }
 
 const HABIT_LABELS: Record<string, { label: string; mode: "boolean" | "numeric"; unit?: string }> = {
@@ -62,6 +62,18 @@ export default function MorningReview({ currentDay, yesterday, streaks, yesterda
     proud: yesterday?.proud ?? "",
   });
 
+  // Local state for yesterday's action completions
+  const [actions, setActions] = useState<Record<number, number>>(() => ({ ...yesterdayActionCompletions }));
+
+  const toggleAction = (index: number) => {
+    setActions((prev) => ({ ...prev, [index]: prev[index] ? 0 : 1 }));
+  };
+
+  // Sync actions when prop loads asynchronously
+  useEffect(() => {
+    setActions({ ...yesterdayActionCompletions });
+  }, [yesterdayActionCompletions]);
+
   // Sync habits when yesterday prop loads asynchronously
   useEffect(() => {
     if (!yesterday) return;
@@ -105,7 +117,7 @@ export default function MorningReview({ currentDay, yesterday, streaks, yesterda
 
   const handleDismiss = () => {
     setSaving(true);
-    onSaveYesterday({ habits, reflections });
+    onSaveYesterday({ habits, reflections, actions });
     setTimeout(() => {
       onDismiss();
     }, 800);
@@ -130,25 +142,28 @@ export default function MorningReview({ currentDay, yesterday, streaks, yesterda
         </div>
 
         <div className="space-y-6">
-          {/* Yesterday's actions — read-only review */}
+          {/* Yesterday's actions — toggleable */}
           {yesterdayActions.length > 0 && (
             <div className="space-y-2">
               <p className="text-text-secondary text-xs uppercase tracking-widest">
                 Yesterday&apos;s actions
               </p>
+              <p className="text-text-secondary/60 text-xs">Tap to toggle</p>
               <div className="space-y-1.5">
                 {yesterdayActions.map((action, i) => {
-                  const done = (yesterdayActionCompletions[i] ?? 0) > 0;
+                  const done = (actions[i] ?? 0) > 0;
                   return (
-                    <div
+                    <button
                       key={i}
-                      className={`w-full flex items-center gap-3 text-sm py-2.5 px-3 rounded-lg ${
+                      type="button"
+                      onClick={() => toggleAction(i)}
+                      className={`w-full flex items-center gap-3 text-sm py-2.5 px-3 rounded-lg transition-colors ${
                         done
                           ? "text-foreground bg-accent/5"
-                          : "text-text-secondary/60"
+                          : "text-text-secondary/60 hover:bg-surface-light"
                       }`}
                     >
-                      <div className={`w-5 h-5 rounded-full border-2 shrink-0 flex items-center justify-center ${
+                      <div className={`w-5 h-5 rounded-full border-2 shrink-0 flex items-center justify-center transition-colors ${
                         done ? "border-accent bg-accent" : "border-surface-light"
                       }`}>
                         {done && (
@@ -158,7 +173,7 @@ export default function MorningReview({ currentDay, yesterday, streaks, yesterda
                         )}
                       </div>
                       <span className="text-left flex-1">{action}</span>
-                    </div>
+                    </button>
                   );
                 })}
               </div>
