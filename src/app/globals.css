@@ -168,9 +168,11 @@ body::before {
 }
 .animate-fade-up-in { animation: fade-up-in 0.4s ease-out; }
 
-/* Day begins transition */
+/* Day begins transition — breathing rhythm */
 @keyframes day-begins {
-  0% { opacity: 0; transform: scale(0.95); }
-  100% { opacity: 1; transform: scale(1); }
+  0%   { opacity: 0; transform: scale(0.96); }
+  30%  { opacity: 1; transform: scale(1); }
+  70%  { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.02); }
 }
-.animate-day-begins { animation: day-begins 0.6s ease-out; }
+.animate-day-begins { animation: day-begins 3s ease-in-out forwards; }

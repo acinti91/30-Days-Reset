@@ -324,7 +324,7 @@ export default function TodayView({ currentDay, viewingDay, startDate, allCheckI
     sessionStorage.setItem(`morning-review-dismissed-${today}`, "1");
     setShowMorningReview(false);
     setShowDayBegins(true);
-    setTimeout(() => setShowDayBegins(false), 1500);
+    setTimeout(() => setShowDayBegins(false), 3200);
   }, [today]);
 
   // Save yesterday's habits, reflections, and actions from morning review
@@ -369,6 +369,15 @@ export default function TodayView({ currentDay, viewingDay, startDate, allCheckI
   const progress = ((displayDay - 1) / 30) * 100;
 
   // Count completed habits + actions for today
+  const encouragements = [
+    "Let's keep going. You're doing great.",
+    "One day at a time. You've got this.",
+    "Take a breath. Today is yours.",
+    "You showed up. That's what matters.",
+    "Steady and strong. Let's go.",
+  ];
+  const encouragement = encouragements[(currentDay - 1) % encouragements.length];
+
   const completedHabits = activeHabits.filter(
     (h) => (localCheckIn[h.field as keyof typeof localCheckIn] as number) > 0
   ).length;
@@ -400,6 +409,9 @@ export default function TodayView({ currentDay, viewingDay, startDate, allCheckI
             Day <span className="text-accent">{currentDay}</span>
           </h1>
           <p className="text-text-secondary text-lg mt-2">begins</p>
+          <p className="text-text-secondary/70 text-sm mt-6 max-w-xs text-center leading-relaxed">
+            {encouragement}
+          </p>
         </div>
       )}
 
@@ -430,22 +442,13 @@ export default function TodayView({ currentDay, viewingDay, startDate, allCheckI
         </p>
       </div>
 
-      {/* 2. Narrative section (focus callout + coach intro) */}
+      {/* 2. Narrative section — "What Today Is About" */}
       {day.coachIntro && (
         <div className="space-y-3">
           <h2 className="text-xs uppercase tracking-widest text-text-secondary">
-            Why This Matters Today
+            What Today Is About
           </h2>
-          {/* Focus callout box */}
-          <div className="bg-surface/50 rounded-lg px-4 py-3 space-y-1">
-            {day.focus.map((f, i) => (
-              <div key={i} className="flex gap-2 items-start">
-                <div className="w-1 h-1 rounded-full bg-accent mt-2 shrink-0" />
-                <p className="text-foreground text-sm">{f}</p>
-              </div>
-            ))}
-          </div>
-          {/* Coach intro paragraphs */}
+          {/* Coach intro paragraphs first */}
           <div className="text-foreground/70 text-sm leading-relaxed space-y-3">
             {day.coachIntro.split("\n\n").map((paragraph, i) => (
               <p key={i}>
@@ -457,6 +460,15 @@ export default function TodayView({ currentDay, viewingDay, startDate, allCheckI
                   )
                 )}
               </p>
+            ))}
+          </div>
+          {/* Focus points as subtle callout */}
+          <div className="bg-surface/50 rounded-lg px-4 py-3 space-y-1">
+            {day.focus.map((f, i) => (
+              <div key={i} className="flex gap-2 items-start">
+                <div className="w-1 h-1 rounded-full bg-accent mt-2 shrink-0" />
+                <p className="text-foreground text-sm">{f}</p>
+              </div>
             ))}
           </div>
         </div>
@@ -483,45 +495,7 @@ export default function TodayView({ currentDay, viewingDay, startDate, allCheckI
         </div>
       )}
 
-      {/* 3. Actions */}
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <h2 className="text-xs uppercase tracking-widest text-text-secondary">
-            Actions
-          </h2>
-          <span className="text-xs text-text-secondary">
-            {day.actions.filter((_, i) => actionCompletions[i] > 0).length}/{day.actions.length}
-          </span>
-        </div>
-        <div className="space-y-2">
-          {day.actions.map((action, i) => {
-            const input = day.inputs?.find((inp: DayInput) => inp.actionIndex === i);
-            const showInput = input && (actionCompletions[i] > 0 || actionResponses[i]);
-            return (
-              <div key={i}>
-                <HabitCard
-                  field={String(i)}
-                  label={action}
-                  mode="boolean"
-                  value={actionCompletions[i] ?? 0}
-                  onChange={handleActionToggle}
-                />
-                {showInput && (
-                  <ActionInput
-                    input={input}
-                    value={actionResponses[i] ?? ""}
-                    onChange={(val) => handleActionResponse(i, val)}
-                    disabled={isPastDay && !editing}
-                    comparisonValue={displayDay === 14 && i === 2 ? day5ScreenTime : undefined}
-                  />
-                )}
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* 4. Daily Habits */}
+      {/* 3. Daily Habits */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <h2 className="text-xs uppercase tracking-widest text-text-secondary">
@@ -547,6 +521,44 @@ export default function TodayView({ currentDay, viewingDay, startDate, allCheckI
                 streak={streaks[habit.field as keyof typeof streaks] ?? 0}
                 onChange={handleHabitChange}
               />
+            );
+          })}
+        </div>
+      </div>
+
+      {/* 4. Actions — "Today, in a nutshell" */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <p className="text-text-secondary text-sm italic">
+            Today, in a nutshell:
+          </p>
+          <span className="text-xs text-text-secondary">
+            {completedActions}/{day.actions.length}
+          </span>
+        </div>
+        <div className="space-y-2">
+          {day.actions.map((action, i) => {
+            const input = day.inputs?.find((inp: DayInput) => inp.actionIndex === i);
+            const showInput = input && (actionCompletions[i] > 0 || actionResponses[i]);
+            return (
+              <div key={i}>
+                <HabitCard
+                  field={String(i)}
+                  label={action}
+                  mode="boolean"
+                  value={actionCompletions[i] ?? 0}
+                  onChange={handleActionToggle}
+                />
+                {showInput && (
+                  <ActionInput
+                    input={input}
+                    value={actionResponses[i] ?? ""}
+                    onChange={(val) => handleActionResponse(i, val)}
+                    disabled={isPastDay && !editing}
+                    comparisonValue={displayDay === 14 && i === 2 ? day5ScreenTime : undefined}
+                  />
+                )}
+              </div>
             );
           })}
         </div>
