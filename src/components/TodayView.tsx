@@ -497,43 +497,12 @@ export default function TodayView({ currentDay, viewingDay, startDate, allCheckI
         </div>
       )}
 
-      {/* 3. Daily Habits */}
+      {/* 3. Key Actions */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <h2 className="text-xs uppercase tracking-widest text-text-secondary">
-            Daily Habits
+            Key Actions
           </h2>
-          <span className="text-xs text-text-secondary">
-            {completedHabits}/{activeHabits.length}
-          </span>
-        </div>
-        <div className="space-y-2">
-          {activeHabits.map((habit) => {
-            const isNew = (HABIT_INTRO_DAY[habit.field] ?? 1) === displayDay;
-            return (
-              <HabitCard
-                key={habit.field}
-                field={habit.field}
-                label={habit.label}
-                mode={habit.mode}
-                unit={habit.unit}
-                info={habit.info}
-                isNew={isNew}
-                value={localCheckIn[habit.field as keyof typeof localCheckIn] as number}
-                streak={streaks[habit.field as keyof typeof streaks] ?? 0}
-                onChange={handleHabitChange}
-              />
-            );
-          })}
-        </div>
-      </div>
-
-      {/* 4. Actions — "Today, in a nutshell" */}
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <p className="text-text-secondary text-sm italic">
-            Today, in a nutshell:
-          </p>
           <span className="text-xs text-text-secondary">
             {completedActions}/{day.actions.length}
           </span>
@@ -561,6 +530,37 @@ export default function TodayView({ currentDay, viewingDay, startDate, allCheckI
                   />
                 )}
               </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* 4. Daily Habits */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xs uppercase tracking-widest text-text-secondary">
+            Daily Habits
+          </h2>
+          <span className="text-xs text-text-secondary">
+            {completedHabits}/{activeHabits.length}
+          </span>
+        </div>
+        <div className="space-y-2">
+          {activeHabits.map((habit) => {
+            const isNew = (HABIT_INTRO_DAY[habit.field] ?? 1) === displayDay;
+            return (
+              <HabitCard
+                key={habit.field}
+                field={habit.field}
+                label={habit.label}
+                mode={habit.mode}
+                unit={habit.unit}
+                info={habit.info}
+                isNew={isNew}
+                value={localCheckIn[habit.field as keyof typeof localCheckIn] as number}
+                streak={streaks[habit.field as keyof typeof streaks] ?? 0}
+                onChange={handleHabitChange}
+              />
             );
           })}
         </div>
