@@ -447,7 +447,7 @@ export default function TodayView({ currentDay, viewingDay, startDate, allCheckI
       <div className="px-5 pt-8 pb-28 max-w-lg mx-auto space-y-8">
       {/* 1. Greeting + progress line */}
       <div className="flex items-center justify-between">
-        <p className="text-text-secondary text-sm">
+        <p className="font-serif text-text-secondary text-base font-light">
           {getGreeting()}, Andrea
         </p>
         <div className="flex items-center gap-2.5">
@@ -491,7 +491,7 @@ export default function TodayView({ currentDay, viewingDay, startDate, allCheckI
 
         return (
           <div className="space-y-3">
-            <div className="text-foreground/70 text-sm leading-relaxed space-y-3">
+            <div className="text-foreground/70 text-[15px] space-y-3" style={{ fontFamily: "var(--font-eb-garamond), serif", lineHeight: 1.75 }}>
               {shown.map(renderParagraph)}
             </div>
             {hasMore && (

@@ -20,6 +20,7 @@
   --color-accent-muted: var(--accent-muted);
   --font-sans: var(--font-dm-sans);
   --font-serif: var(--font-cormorant);
+  --font-eb-garamond: var(--font-eb-garamond);
 }
 
 body {
