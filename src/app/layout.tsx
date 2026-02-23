@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, DM_Sans, EB_Garamond, Quicksand } from "next/font/google";
+import { Cormorant_Garamond, DM_Sans, Quicksand } from "next/font/google";
 import "./globals.css";
 
 const cormorant = Cormorant_Garamond({
@@ -13,13 +13,6 @@ const dmSans = DM_Sans({
   variable: "--font-dm-sans",
   subsets: ["latin"],
   weight: ["300", "400", "500", "700"],
-  display: "swap",
-});
-
-const ebGaramond = EB_Garamond({
-  variable: "--font-eb-garamond",
-  subsets: ["latin"],
-  weight: ["400", "500"],
   display: "swap",
 });
 
@@ -41,7 +34,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${cormorant.variable} ${dmSans.variable} ${ebGaramond.variable} ${quicksand.variable} antialiased`}>
+      <body className={`${cormorant.variable} ${dmSans.variable} ${quicksand.variable} antialiased`}>
         {children}
       </body>
     </html>

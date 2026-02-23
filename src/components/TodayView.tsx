@@ -491,7 +491,7 @@ export default function TodayView({ currentDay, viewingDay, startDate, allCheckI
 
         return (
           <div className="space-y-3">
-            <div className="text-foreground/70 text-[15px] space-y-3" style={{ fontFamily: "var(--font-eb-garamond), serif", lineHeight: 1.75 }}>
+            <div className="text-foreground/70 text-sm font-light space-y-3" style={{ lineHeight: 1.8 }}>
               {shown.map(renderParagraph)}
             </div>
             {hasMore && (
