@@ -370,14 +370,39 @@ export default function TodayView({ currentDay, viewingDay, startDate, allCheckI
   const progress = ((displayDay - 1) / 30) * 100;
 
   // Count completed habits + actions for today
-  const encouragements = [
-    "Let's keep going. You're doing great.",
-    "One day at a time. You've got this.",
-    "Take a breath. Today is yours.",
-    "You showed up. That's what matters.",
-    "Steady and strong. Let's go.",
-  ];
-  const encouragement = encouragements[(currentDay - 1) % encouragements.length];
+  const encouragements: Record<number, string> = {
+    1: "This is where it starts. You're ready.",
+    2: "You came back. That's already a win.",
+    3: "Three days in. The foundation is forming.",
+    4: "You're building something real here.",
+    5: "Five days. Your brain is starting to notice.",
+    6: "Almost a week. Stay with it.",
+    7: "One full week. Look how far you've come.",
+    8: "Week two begins. You're in this now.",
+    9: "The hard part gets easier from here.",
+    10: "Double digits. You're doing this.",
+    11: "Eleven days of choosing differently.",
+    12: "The middle stretch. This is where it counts.",
+    13: "You're halfway to something powerful.",
+    14: "Two full weeks. That takes real commitment.",
+    15: "Fifteen days. The shift is happening.",
+    16: "You're deeper into this than most people get.",
+    17: "Keep going. The momentum is yours.",
+    18: "Eighteen days of rewiring. Feel the difference.",
+    19: "Almost three weeks. You're not the same person.",
+    20: "Twenty days. This is who you're becoming.",
+    21: "Three full weeks. Your new baseline is forming.",
+    22: "The home stretch begins. You've earned this.",
+    23: "Twenty-three days of showing up for yourself.",
+    24: "You're proving something no one else can.",
+    25: "Five days left. Finish what you started.",
+    26: "The end is in sight. Stay steady.",
+    27: "Three more days. You've got this.",
+    28: "Almost there. Every day mattered.",
+    29: "Tomorrow is the last day. Breathe that in.",
+    30: "Day 30. You made it. Be proud.",
+  };
+  const encouragement = encouragements[currentDay] ?? "One day at a time. You've got this.";
 
   const completedHabits = activeHabits.filter(
     (h) => (localCheckIn[h.field as keyof typeof localCheckIn] as number) > 0
@@ -410,7 +435,7 @@ export default function TodayView({ currentDay, viewingDay, startDate, allCheckI
             Day <span className="text-accent">{currentDay}</span>
           </h1>
           <p className="text-text-secondary text-lg mt-2">begins</p>
-          <p className="text-text-secondary/70 text-sm mt-6 max-w-xs text-center leading-relaxed">
+          <p className="text-text-secondary text-base mt-8 max-w-xs text-center leading-relaxed italic">
             {encouragement}
           </p>
         </div>
