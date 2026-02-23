@@ -116,6 +116,9 @@ export default function PlanView({ currentDay, onDaySelect }: PlanViewProps) {
                             >
                               Day {day.day}
                             </span>
+                            <span className="text-text-secondary text-sm">
+                              {day.title}
+                            </span>
                             {isPast && (
                               <svg
                                 className="w-4 h-4 text-accent/50"

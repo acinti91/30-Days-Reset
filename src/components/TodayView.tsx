@@ -454,6 +454,7 @@ export default function TodayView({ currentDay, viewingDay, startDate, allCheckI
           </h1>
           <span className="text-text-secondary text-sm">{displayDay}/30</span>
         </div>
+        <p className="text-foreground/80 text-lg font-serif font-light">{day.title}</p>
 
         {/* Progress bar */}
         <div className="h-0.5 bg-surface-light rounded-full overflow-hidden">

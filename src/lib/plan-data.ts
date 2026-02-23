@@ -8,6 +8,7 @@ export interface DayInput {
 
 export interface Day {
   day: number;
+  title: string;
   focus: string[];
   actions: string[];
   coachIntro: string;
@@ -45,6 +46,7 @@ export const planData: Week[] = [
     days: [
       {
         day: 1,
+        title: "The Phone-Free Bedroom",
         focus: ["Establish the phone-free bedroom", "Notice every urge to check your phone"],
         actions: [
           "Buy or find an alarm clock — your phone no longer lives in the bedroom",
@@ -55,6 +57,7 @@ export const planData: Week[] = [
       },
       {
         day: 2,
+        title: "Protect Your First Hour",
         focus: ["Phone-free first hour", "Build the morning container"],
         actions: [
           "Create a morning sequence: water, stretch, breathe, eat",
@@ -65,6 +68,7 @@ export const planData: Week[] = [
       },
       {
         day: 3,
+        title: "The Notification Audit",
         focus: ["Notification audit", "Deepen boredom tolerance"],
         actions: [
           "Turn off ALL non-essential notifications (keep calls and genuine messages)",
@@ -74,6 +78,7 @@ export const planData: Week[] = [
       },
       {
         day: 4,
+        title: "Grayscale & Urge Surfing",
         focus: ["Grayscale mode", "Urge surfing practice"],
         actions: [
           "Switch your phone to grayscale/accessibility mode",
@@ -87,6 +92,7 @@ export const planData: Week[] = [
       },
       {
         day: 5,
+        title: "Know Your Baseline",
         focus: ["Screen time baseline", "Introduce meditation"],
         actions: [
           "Check your screen time stats — write the number down without judgment",
@@ -99,6 +105,7 @@ export const planData: Week[] = [
       },
       {
         day: 6,
+        title: "The Social Media Fast",
         focus: ["Social media fast begins", "Physical movement"],
         actions: [
           "No social media today — at all. Log out if needed.",
@@ -108,6 +115,7 @@ export const planData: Week[] = [
       },
       {
         day: 7,
+        title: "Rest & Reflect",
         focus: ["Week 1 reflection", "Rest"],
         actions: [
           "Continue social media fast",
@@ -134,6 +142,7 @@ export const planData: Week[] = [
     days: [
       {
         day: 8,
+        title: "Rediscover Analog",
         focus: ["Two-hour phone-free block", "Rediscover analog pleasure"],
         actions: [
           "Designate a 2-hour block today where your phone is off or in another room",
@@ -143,6 +152,7 @@ export const planData: Week[] = [
       },
       {
         day: 9,
+        title: "Eating Without Screens",
         focus: ["Meal without screens", "Extend morning routine"],
         actions: [
           "Eat at least two meals today with zero screens",
@@ -152,6 +162,7 @@ export const planData: Week[] = [
       },
       {
         day: 10,
+        title: "One-Third Milestone",
         focus: ["One-third milestone", "Conversation practice"],
         actions: [
           "Celebrate quietly: you are one-third through",
@@ -161,6 +172,7 @@ export const planData: Week[] = [
       },
       {
         day: 11,
+        title: "News Fast & Nature",
         focus: ["News fast", "Nature time"],
         actions: [
           "No news consumption today — no articles, no feeds, no push alerts",
@@ -171,6 +183,7 @@ export const planData: Week[] = [
       },
       {
         day: 12,
+        title: "Create, Don't Consume",
         focus: ["Creative output", "Evening wind-down"],
         actions: [
           "Make something today: write, cook, draw, garden, play music",
@@ -181,6 +194,7 @@ export const planData: Week[] = [
       },
       {
         day: 13,
+        title: "Boredom as a Portal",
         focus: ["Boredom as a portal", "Extend phone-free blocks"],
         actions: [
           "Sit with boredom for 25 minutes today — no input, no distraction",
@@ -194,6 +208,7 @@ export const planData: Week[] = [
       },
       {
         day: 14,
+        title: "Halfway Checkpoint",
         focus: ["Week 2 reflection", "Halfway preparation"],
         actions: [
           "Halfway through tomorrow — write about your journey so far",
@@ -221,6 +236,7 @@ export const planData: Week[] = [
     days: [
       {
         day: 15,
+        title: "The Half-Day Sabbath",
         focus: ["Halfway celebration", "Half-day sabbath"],
         actions: [
           "Morning: phone off until noon. Six hours of analog living.",
@@ -230,6 +246,7 @@ export const planData: Week[] = [
       },
       {
         day: 16,
+        title: "Relationship Inventory",
         focus: ["Relationship inventory", "Intentional communication"],
         actions: [
           "List the people you've been connecting with via phone vs. in person",
@@ -243,6 +260,7 @@ export const planData: Week[] = [
       },
       {
         day: 17,
+        title: "The Art of Single-Tasking",
         focus: ["Work boundaries", "Single-tasking"],
         actions: [
           "Close all unnecessary browser tabs. Work on one thing at a time.",
@@ -253,6 +271,7 @@ export const planData: Week[] = [
       },
       {
         day: 18,
+        title: "Know Your Triggers",
         focus: ["Trigger mapping", "Response planning"],
         actions: [
           "Map your top 5 digital triggers (boredom, anxiety, FOMO, habit, loneliness)",
@@ -267,6 +286,7 @@ export const planData: Week[] = [
       },
       {
         day: 19,
+        title: "Comfort With Silence",
         focus: ["Comfort with silence", "Extended meditation"],
         actions: [
           "Try 30 minutes of complete silence today — no music, no podcasts, nothing",
@@ -280,6 +300,7 @@ export const planData: Week[] = [
       },
       {
         day: 20,
+        title: "Prepare for Sabbath",
         focus: ["Two-thirds milestone", "Full-day sabbath prep"],
         actions: [
           "Two-thirds complete. Acknowledge what you've built.",
@@ -290,6 +311,7 @@ export const planData: Week[] = [
       },
       {
         day: 21,
+        title: "Full Digital Sabbath",
         focus: ["Full digital sabbath", "Deep analog day"],
         actions: [
           "Phone OFF from wake to sleep. Full day without digital input.",
@@ -313,6 +335,7 @@ export const planData: Week[] = [
     days: [
       {
         day: 22,
+        title: "Design Your Policy",
         focus: ["Design your digital policy", "Boundary architecture"],
         actions: [
           "Write your personal 'phone use policy' — when, how long, what for",
@@ -326,6 +349,7 @@ export const planData: Week[] = [
       },
       {
         day: 23,
+        title: "Build Accountability",
         focus: ["Accountability structures", "Community"],
         actions: [
           "Set up accountability: a friend, a partner, a weekly check-in",
@@ -335,6 +359,7 @@ export const planData: Week[] = [
       },
       {
         day: 24,
+        title: "Engineer Your Environment",
         focus: ["Environmental design", "Friction engineering"],
         actions: [
           "Re-organize your phone: only essential apps on home screen",
@@ -345,6 +370,7 @@ export const planData: Week[] = [
       },
       {
         day: 25,
+        title: "Finalize Your Rituals",
         focus: ["Morning ritual finalization", "Evening ritual finalization"],
         actions: [
           "Write down your ideal morning ritual — the one you want to keep forever",
@@ -359,6 +385,7 @@ export const planData: Week[] = [
       },
       {
         day: 26,
+        title: "Who You're Becoming",
         focus: ["Identity narrative", "Values alignment"],
         actions: [
           "Write a short paragraph: 'I am the kind of person who...'",
@@ -373,6 +400,7 @@ export const planData: Week[] = [
       },
       {
         day: 27,
+        title: "Stress Test",
         focus: ["Stress test", "Resilience planning"],
         actions: [
           "Today, intentionally face a trigger situation without reaching for your phone",
@@ -387,6 +415,7 @@ export const planData: Week[] = [
       },
       {
         day: 28,
+        title: "Gratitude & Letting Go",
         focus: ["Gratitude practice", "Letting go"],
         actions: [
           "Write down 10 things this reset has given you",
@@ -401,6 +430,7 @@ export const planData: Week[] = [
       },
       {
         day: 29,
+        title: "The Final Sabbath",
         focus: ["Final digital sabbath", "Preparation for re-entry"],
         actions: [
           "One more full day without your phone",
@@ -414,6 +444,7 @@ export const planData: Week[] = [
       },
       {
         day: 30,
+        title: "Completion",
         focus: ["Completion", "New beginning"],
         actions: [
           "You made it. Read your Day 1 journal entry and sit with the distance traveled.",
