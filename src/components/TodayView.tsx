@@ -522,11 +522,11 @@ export default function TodayView({ currentDay, viewingDay, startDate, allCheckI
         </div>
       )}
 
-      {/* 3. Key Actions */}
+      {/* 3. Your Actions For Today */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <h2 className="text-xs uppercase tracking-widest text-text-secondary">
-            Key Actions
+            Your Actions For Today
           </h2>
           <span className="text-xs text-text-secondary">
             {completedActions}/{day.actions.length}
