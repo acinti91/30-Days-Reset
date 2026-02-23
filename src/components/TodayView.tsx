@@ -599,6 +599,9 @@ export default function TodayView({ currentDay, viewingDay, startDate, allCheckI
           noticed={localCheckIn.noticed}
           proud={localCheckIn.proud}
           onSave={handleReflectionSave}
+          extraPrompt={day.reflectionPrompt}
+          extraValue={actionResponses[99] ?? ""}
+          onSaveExtra={(val) => handleActionResponse(99, val)}
         />
       )}
 

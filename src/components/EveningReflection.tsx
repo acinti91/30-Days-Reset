@@ -7,6 +7,9 @@ interface Props {
   noticed: string;
   proud: string;
   onSave: (field: "hardest" | "noticed" | "proud", value: string) => void;
+  extraPrompt?: { label: string; placeholder: string };
+  extraValue?: string;
+  onSaveExtra?: (value: string) => void;
 }
 
 function AutoTextarea({
@@ -73,7 +76,7 @@ function AutoTextarea({
   );
 }
 
-export default function EveningReflection({ hardest, noticed, proud, onSave }: Props) {
+export default function EveningReflection({ hardest, noticed, proud, onSave, extraPrompt, extraValue, onSaveExtra }: Props) {
   return (
     <div className="space-y-4">
       <h2 className="text-xs uppercase tracking-widest text-text-secondary">
@@ -97,6 +100,14 @@ export default function EveningReflection({ hardest, noticed, proud, onSave }: P
         placeholder="I'm proud that I..."
         onSave={(v) => onSave("proud", v)}
       />
+      {extraPrompt && onSaveExtra && (
+        <AutoTextarea
+          label={extraPrompt.label}
+          value={extraValue ?? ""}
+          placeholder={extraPrompt.placeholder}
+          onSave={onSaveExtra}
+        />
+      )}
     </div>
   );
 }

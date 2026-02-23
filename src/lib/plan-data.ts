@@ -13,6 +13,7 @@ export interface Day {
   actions: string[];
   coachIntro: string;
   inputs?: DayInput[];
+  reflectionPrompt?: { label: string; placeholder: string };
 }
 
 export const HABIT_INTRO_DAY: Record<string, number> = {
@@ -65,6 +66,7 @@ export const planData: Week[] = [
           "Choose your phone charging station's permanent spot — make it a ritual",
         ],
         coachIntro: "Yesterday you reclaimed your bedroom. Today you reclaim your morning.\n\n**The first hour after waking is when your brain is most impressionable** — cortisol is naturally elevated, and your prefrontal cortex is still coming online. If the first thing you do is scroll, you're handing that vulnerable window to algorithms designed to hook you.\n\nInstead, you'll build a **simple morning sequence** that belongs to you. Water, movement, breath, food — in whatever order feels right.\n\nTake a moment to write about how last night felt without the phone in your bedroom. Even a few sentences captures something you'll forget later — **the rawness of early change is worth recording**.\n\nFinally, choose a permanent spot for your phone's charging station. Making it a fixed location turns a decision into a ritual, and **rituals are easier to maintain than rules**.",
+        reflectionPrompt: { label: "How did last night feel without your phone in the bedroom?", placeholder: "Last night without my phone felt..." },
       },
       {
         day: 3,
@@ -180,6 +182,7 @@ export const planData: Week[] = [
           "Notice: what did you actually miss by not reading the news?",
         ],
         coachIntro: "News creates a **constant low-grade anxiety** by making distant events feel immediate and personal. The 24-hour news cycle is designed to keep you checking — \"what happened now?\" is just another form of compulsive refreshing.\n\nToday you test what happens when you **step away from it entirely**.\n\nBy tonight, ask yourself honestly: what did you actually miss? Almost certainly **nothing that affected your daily life**.\n\nMeanwhile, the 30 minutes you spend in nature will do something news never can — it will **lower your cortisol, calm your nervous system**, and remind your body what it feels like to exist without urgency.",
+        reflectionPrompt: { label: "What did you actually miss by not reading the news?", placeholder: "By the end of the day, I realized..." },
       },
       {
         day: 12,
@@ -243,6 +246,7 @@ export const planData: Week[] = [
           "Do something that brings genuine joy — not consumption, but creation or connection",
         ],
         coachIntro: "Welcome to Week 3 — and congratulations, **you're halfway through**.\n\nThis is the hardest stretch of the reset. The novelty of the first week is gone, the structured progress of the second week is behind you, and the finish line still feels far away. **Motivation naturally dips here.** That's normal, and it's why this week is designed to challenge and integrate rather than introduce new habits.\n\nToday you celebrate the halfway mark with a **half-day digital sabbath** — phone off from waking until noon. Six hours of analog living. This isn't a test of endurance; it's a preview of what **sustainable freedom** from your phone actually feels like.\n\nFill those hours with something that brings genuine joy: not consumption, but creation, connection, or quiet presence.\n\nThe question in tonight's journal — **\"Who are you becoming?\"** — matters more than it might seem. You're not just changing a habit; you're changing your relationship with stimulation, attention, and time itself.",
+        reflectionPrompt: { label: "Who are you becoming?", placeholder: "Through this reset, I'm becoming someone who..." },
       },
       {
         day: 16,
@@ -319,6 +323,7 @@ export const planData: Week[] = [
           "Before bed, write about this day by candlelight or lamplight",
         ],
         coachIntro: "This is the culmination of three weeks of practice. **A full day — wake to sleep — without your phone.** Three weeks ago, this might have felt impossible. Now you have the boredom tolerance, the analog hobbies, the morning and evening rituals, the meditation practice, and the self-awareness to handle it.\n\nDon't try to make this day productive. **Let it be slow, physical, and present.** Cook something elaborate. Walk somewhere beautiful. Have a real conversation. Sit and do nothing for a while.\n\nThe 30-minute meditation today can be your anchor point.\n\nBefore bed, write about this day by candlelight or lamplight — no screens, even for journaling. You're proving to yourself that a full day of analog living **isn't just survivable; it's rich**.",
+        reflectionPrompt: { label: "Write about your full digital sabbath day", placeholder: "Today without my phone, I..." },
       },
     ],
   },
@@ -356,6 +361,7 @@ export const planData: Week[] = [
           "Consider if any online communities genuinely serve your growth",
         ],
         coachIntro: "Research on behavior change is unanimous on one point: **social support is the strongest predictor** of whether a new habit sticks. People who go it alone relapse at much higher rates than those who have even one accountability partner.\n\nToday you **build that structure**. It could be a friend who checks in weekly, a partner who shares the commitment, or a small group that meets regularly.\n\nYou also honestly evaluate your online communities — some genuinely support growth, while others are just **another form of consumption dressed up as connection**.\n\nThe journal question tonight asks what relationships have improved during this reset. The answer usually reveals **who your real support network is**.",
+        reflectionPrompt: { label: "What relationships have improved during this reset?", placeholder: "The relationships that have changed are..." },
       },
       {
         day: 24,
