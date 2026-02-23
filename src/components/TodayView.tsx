@@ -158,6 +158,9 @@ export default function TodayView({ currentDay, viewingDay, startDate, allCheckI
   // Edit mode for past days
   const [editing, setEditing] = useState(false);
 
+  // Coach intro expanded state
+  const [introExpanded, setIntroExpanded] = useState(false);
+
   // Whether this past day has an existing check-in
   const hasExistingCheckIn = useMemo(
     () => allCheckIns.some((c) => c.date === displayDate),
@@ -442,65 +445,76 @@ export default function TodayView({ currentDay, viewingDay, startDate, allCheckI
       )}
 
       <div className="px-5 pt-8 pb-28 max-w-lg mx-auto space-y-8">
-      {/* 1. Greeting + Day Header */}
-      <div className="space-y-3">
+      {/* 1. Greeting + progress line */}
+      <div className="flex items-center justify-between">
         <p className="text-text-secondary text-sm">
-          {getGreeting()}{userName ? `, ${userName}` : ""}
+          {getGreeting()}, Andrea
         </p>
-        <div className="flex items-baseline justify-between">
-          <h1 className="font-serif text-4xl font-light">
-            Day <span className="text-accent">{displayDay}</span>
-            {isPastDay && <span className="text-text-secondary text-lg ml-2">(past)</span>}
-          </h1>
-          <span className="text-text-secondary text-sm">{displayDay}/30</span>
+        <div className="flex items-center gap-2.5">
+          <div className="w-16 h-[3px] bg-surface-light rounded-full overflow-hidden">
+            <div
+              className="h-full bg-accent/60 rounded-full transition-all duration-500"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+          <span className="text-text-secondary text-xs">{displayDay}/30</span>
         </div>
-        <p className="text-foreground/80 text-lg font-serif font-light">{day.title}</p>
-
-        {/* Progress bar */}
-        <div className="h-0.5 bg-surface-light rounded-full overflow-hidden">
-          <div
-            className="h-full bg-accent rounded-full transition-all duration-500"
-            style={{ width: `${progress}%` }}
-          />
-        </div>
-
-        <p className="text-text-secondary text-sm">
-          Week {week.week}: {week.theme}
-        </p>
       </div>
 
-      {/* 2. Narrative section — "What Today Is About" */}
-      {day.coachIntro && (
-        <div className="space-y-3">
-          <h2 className="text-xs uppercase tracking-widest text-text-secondary">
-            What Today Is About
-          </h2>
-          {/* Coach intro paragraphs first */}
-          <div className="text-foreground/70 text-sm leading-relaxed space-y-3">
-            {day.coachIntro.split("\n\n").map((paragraph, i) => (
-              <p key={i}>
-                {paragraph.split(/(\*\*[^*]+\*\*)/).map((part, j) =>
-                  part.startsWith("**") && part.endsWith("**") ? (
-                    <strong key={j} className="text-foreground font-medium">{part.slice(2, -2)}</strong>
-                  ) : (
-                    <span key={j}>{part}</span>
-                  )
-                )}
-              </p>
-            ))}
+      {/* 2. Day hero + title */}
+      <div className="space-y-1 -mt-4">
+        <h1 className="font-serif text-4xl font-light">
+          Day <span className="text-accent">{displayDay}</span>
+          {isPastDay && <span className="text-text-secondary text-lg ml-2">(past)</span>}
+        </h1>
+        <p className="text-foreground/70 text-lg font-serif font-light">{day.title}</p>
+      </div>
+
+      {/* 3. Narrative — collapsible coach intro + focus points */}
+      {day.coachIntro && (() => {
+        const paragraphs = day.coachIntro.split("\n\n");
+        const preview = paragraphs.slice(0, 2);
+        const hasMore = paragraphs.length > 2;
+        const shown = introExpanded ? paragraphs : preview;
+
+        const renderParagraph = (paragraph: string, i: number) => (
+          <p key={i}>
+            {paragraph.split(/(\*\*[^*]+\*\*)/).map((part, j) =>
+              part.startsWith("**") && part.endsWith("**") ? (
+                <strong key={j} className="text-foreground font-medium">{part.slice(2, -2)}</strong>
+              ) : (
+                <span key={j}>{part}</span>
+              )
+            )}
+          </p>
+        );
+
+        return (
+          <div className="space-y-3">
+            <div className="text-foreground/70 text-sm leading-relaxed space-y-3">
+              {shown.map(renderParagraph)}
+            </div>
+            {hasMore && (
+              <button
+                onClick={() => setIntroExpanded(!introExpanded)}
+                className="text-accent text-sm hover:text-accent-muted transition-colors"
+              >
+                {introExpanded ? "Show less" : "Read more"}
+              </button>
+            )}
+            {/* Focus points */}
+            <p className="text-text-secondary/60 text-xs italic">In essence:</p>
+            <div className="bg-surface/50 rounded-lg px-4 py-3 space-y-1">
+              {day.focus.map((f, i) => (
+                <div key={i} className="flex gap-2 items-start">
+                  <div className="w-1 h-1 rounded-full bg-accent mt-2 shrink-0" />
+                  <p className="text-foreground text-sm">{f}</p>
+                </div>
+              ))}
+            </div>
           </div>
-          {/* Focus points as subtle callout */}
-          <p className="text-text-secondary/60 text-xs italic">In essence:</p>
-          <div className="bg-surface/50 rounded-lg px-4 py-3 space-y-1">
-            {day.focus.map((f, i) => (
-              <div key={i} className="flex gap-2 items-start">
-                <div className="w-1 h-1 rounded-full bg-accent mt-2 shrink-0" />
-                <p className="text-foreground text-sm">{f}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+        );
+      })()}
 
       {/* Focus fallback when no coach intro */}
       {!day.coachIntro && day.focus.length > 0 && (
@@ -513,6 +527,9 @@ export default function TodayView({ currentDay, viewingDay, startDate, allCheckI
           ))}
         </div>
       )}
+
+      {/* Divider between context and actions */}
+      <div className="border-t border-surface-light" />
 
       {/* Nudge banner for empty past days */}
       {isPastDay && editing && !hasExistingCheckIn && (
