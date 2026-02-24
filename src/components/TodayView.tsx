@@ -182,8 +182,9 @@ export default function TodayView({ currentDay, viewingDay, startDate, allCheckI
     return !sessionStorage.getItem(`morning-review-dismissed-${today}`);
   });
 
-  // Day N begins interstitial
+  // Day N begins interstitial — two-phase: "in" then "out"
   const [showDayBegins, setShowDayBegins] = useState(false);
+  const [dayBeginsPhase, setDayBeginsPhase] = useState<"in" | "out">("in");
 
   // Initialize local state from existing check-in data
   useEffect(() => {
@@ -323,12 +324,20 @@ export default function TodayView({ currentDay, viewingDay, startDate, allCheckI
     [onSaveCheckIn]
   );
 
+  // Start the interstitial immediately when user clicks Save (before the 800ms "Saved!" delay)
+  const startDayTransition = useCallback(() => {
+    setShowDayBegins(true);
+    setDayBeginsPhase("in");
+    window.scrollTo(0, 0);
+  }, []);
+
+  // Called after 800ms "Saved!" display — remove the review, schedule fade out
   const dismissMorningReview = useCallback(() => {
     sessionStorage.setItem(`morning-review-dismissed-${today}`, "1");
     setShowMorningReview(false);
-    setShowDayBegins(true);
-    window.scrollTo(0, 0);
-    setTimeout(() => setShowDayBegins(false), 3200);
+    // Interstitial has been visible for ~800ms already — hold a bit more, then fade out
+    setTimeout(() => setDayBeginsPhase("out"), 700);
+    setTimeout(() => setShowDayBegins(false), 1300);
   }, [today]);
 
   // Save yesterday's habits, reflections, and actions from morning review
@@ -427,18 +436,19 @@ export default function TodayView({ currentDay, viewingDay, startDate, allCheckI
           yesterdayActions={yesterdayDayData?.day.actions ?? []}
           yesterdayActionCompletions={yesterdayActionCompletions}
           onDismiss={dismissMorningReview}
+          onStartTransition={startDayTransition}
           onSaveYesterday={handleSaveYesterday}
         />
       )}
 
       {/* Day N Begins Interstitial */}
       {showDayBegins && (
-        <div className="fixed inset-0 z-40 bg-background flex flex-col items-center justify-center animate-day-begins">
+        <div className={`fixed inset-0 z-40 bg-background flex flex-col items-center justify-center ${dayBeginsPhase === "in" ? "animate-day-begins-in" : "animate-day-begins-out"}`}>
           <h1 className="font-serif text-5xl font-light text-foreground">
             Day <span className="text-accent">{currentDay}</span>
           </h1>
-          <p className="text-text-secondary text-lg mt-2">begins</p>
-          <p className="text-text-secondary text-base mt-8 max-w-xs text-center leading-relaxed italic">
+          <p className="text-text-secondary text-lg mt-2">{day.title}</p>
+          <p className="text-text-secondary/70 text-sm mt-8 max-w-xs text-center leading-relaxed italic">
             {encouragement}
           </p>
         </div>

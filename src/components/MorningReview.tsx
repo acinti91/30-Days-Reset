@@ -12,6 +12,7 @@ interface Props {
   yesterdayActions: string[];
   yesterdayActionCompletions: Record<number, number>;
   onDismiss: () => void;
+  onStartTransition: () => void;
   onSaveYesterday: (data: { habits: Record<string, number>; reflections: { hardest: string; noticed: string; proud: string }; actions: Record<number, number> }) => void;
 }
 
@@ -35,7 +36,7 @@ const STREAK_SHORT_LABELS: Record<string, string> = {
 
 const HABIT_KEYS = Object.keys(HABIT_LABELS);
 
-export default function MorningReview({ currentDay, yesterday, streaks, yesterdayActions, yesterdayActionCompletions, onDismiss, onSaveYesterday }: Props) {
+export default function MorningReview({ currentDay, yesterday, streaks, yesterdayActions, yesterdayActionCompletions, onDismiss, onStartTransition, onSaveYesterday }: Props) {
   const activeStreaks = Object.entries(streaks).filter(([, v]) => v > 0);
   const quote = getQuoteForDay(currentDay);
 
@@ -120,6 +121,7 @@ export default function MorningReview({ currentDay, yesterday, streaks, yesterda
   const handleDismiss = () => {
     setSaving(true);
     onSaveYesterday({ habits, reflections, actions });
+    onStartTransition();
     setTimeout(() => {
       onDismiss();
     }, 800);
