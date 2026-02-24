@@ -329,7 +329,9 @@ export default function TodayView({ currentDay, viewingDay, startDate, allCheckI
     setShowDayBegins(true);
     setDayBeginsPhase("in");
     window.scrollTo(0, 0);
-  }, []);
+    // Reset to current day so content behind interstitial shows today, not a past day
+    onDayChange(null);
+  }, [onDayChange]);
 
   // Called after 800ms "Saved!" display — remove the review, schedule fade out
   const dismissMorningReview = useCallback(() => {
@@ -443,7 +445,7 @@ export default function TodayView({ currentDay, viewingDay, startDate, allCheckI
 
       {/* Day N Begins Interstitial */}
       {showDayBegins && (
-        <div className={`fixed inset-0 z-40 bg-background flex flex-col items-center justify-center ${dayBeginsPhase === "in" ? "animate-day-begins-in" : "animate-day-begins-out"}`}>
+        <div className={`fixed inset-0 z-50 bg-background flex flex-col items-center justify-center ${dayBeginsPhase === "in" ? "animate-day-begins-in" : "animate-day-begins-out"}`}>
           <h1 className="font-serif text-5xl font-light text-foreground">
             Day <span className="text-accent">{currentDay}</span>
           </h1>
