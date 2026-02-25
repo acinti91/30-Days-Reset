@@ -161,6 +161,9 @@ export default function TodayView({ currentDay, viewingDay, startDate, allCheckI
   // Coach intro expanded state
   const [introExpanded, setIntroExpanded] = useState(false);
 
+  // Save button feedback
+  const [showSaved, setShowSaved] = useState(false);
+
   // Whether this past day has an existing check-in
   const hasExistingCheckIn = useMemo(
     () => allCheckIns.some((c) => c.date === displayDate),
@@ -509,7 +512,7 @@ export default function TodayView({ currentDay, viewingDay, startDate, allCheckI
             {hasMore && (
               <button
                 onClick={() => setIntroExpanded(!introExpanded)}
-                className="text-accent text-sm hover:text-accent-muted transition-colors"
+                className="text-accent text-sm hover:text-accent-muted transition-colors cursor-pointer"
               >
                 {introExpanded ? "Show less" : "Read more"}
               </button>
@@ -634,25 +637,52 @@ export default function TodayView({ currentDay, viewingDay, startDate, allCheckI
         />
       )}
 
-      {/* 6. Close Your Day — current day only */}
+      {/* 6. Bottom buttons — current day only */}
       {!isPastDay && (
-        <CloseYourDay
-          completedCount={completedCount}
-          totalCount={totalCount}
-          displayDay={displayDay}
-          displayDate={displayDate}
-          onSave={handleSaveCurrentCheckIn}
-        />
-      )}
-
-      {/* 7. Talk to Coach — current day only */}
-      {!isPastDay && (
-        <button
-          onClick={onOpenChat}
-          className="w-full bg-surface-light hover:bg-surface border border-surface-light text-text-secondary px-5 py-3 rounded-full transition-colors text-sm -mt-4"
-        >
-          Talk to Coach about your day
-        </button>
+        <div className="space-y-3">
+          <button
+            onClick={() => {
+              handleSaveCurrentCheckIn();
+              setShowSaved(true);
+              setTimeout(() => setShowSaved(false), 2000);
+            }}
+            className="w-full flex items-center justify-center gap-2 py-3 rounded-full border border-surface-light text-text-secondary hover:text-foreground hover:border-accent/30 text-sm transition-colors cursor-pointer"
+          >
+            {showSaved ? (
+              <>
+                <svg className="w-4 h-4 text-accent animate-check-draw" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                  <path d="M5 13l4 4L19 7" />
+                </svg>
+                <span className="text-accent">Saved!</span>
+              </>
+            ) : (
+              <>
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                  <polyline points="17 21 17 13 7 13 7 21" />
+                  <polyline points="7 3 7 8 15 8" />
+                </svg>
+                Save your responses
+              </>
+            )}
+          </button>
+          <CloseYourDay
+            completedCount={completedCount}
+            totalCount={totalCount}
+            displayDay={displayDay}
+            displayDate={displayDate}
+            onSave={handleSaveCurrentCheckIn}
+          />
+          <button
+            onClick={onOpenChat}
+            className="w-full flex items-center justify-center gap-2 py-3 rounded-full border border-surface-light text-text-secondary hover:text-foreground hover:border-accent/30 text-sm transition-colors cursor-pointer"
+          >
+            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+            </svg>
+            Talk to Coach
+          </button>
+        </div>
       )}
 
       {/* 8. Edit/Done (past days) */}
